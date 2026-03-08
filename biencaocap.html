@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hệ Thống Luyện Dịch Nga - Việt Chuyên Sâu</title>
+<style>
+  body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #eef2f5; margin: 0; padding: 20px; color: #2c3e50; line-height: 1.6;}
+  .container { max-width: 1000px; margin: auto; background: #fff; padding: 25px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.08); }
+  h1 { text-align: center; color: #1a5276; margin-bottom: 30px;}
+  .tabs { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 25px; border-bottom: 2px solid #eaeded; padding-bottom: 15px;}
+  .tab-btn { padding: 10px 18px; border: none; background: #eaeded; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 1em; color: #5d6d7e; transition: 0.3s;}
+  .tab-btn.active { background: #1a5276; color: white; }
+  .tab-btn:hover:not(.active) { background: #d5dbdb; }
+  .section-title { background: #1a5276; color: white; padding: 12px 15px; border-radius: 6px; margin-top: 30px; font-size: 1.2em; font-weight: bold;}
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+  .card { background: #fdfefe; padding: 18px; border-left: 5px solid #2980b9; border-radius: 6px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);}
+  .card-vocab { border-left-color: #27ae60; }
+  .card-struct { border-left-color: #8e44ad; }
+  .card-org { border-left-color: #e74c3c; font-size: 1.1em;}
+  textarea { width: 100%; height: 110px; margin-top: 12px; padding: 12px; border: 1px solid #bdc3c7; border-radius: 6px; box-sizing: border-box; font-family: inherit; font-size: 1em; resize: vertical;}
+  textarea:focus { outline: none; border-color: #2980b9;}
+  .btn-check { margin-top: 12px; background: #e67e22; color: white; border: none; padding: 10px 18px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 1em; transition: 0.3s;}
+  .btn-check:hover { background: #d35400; }
+  .feedback { display: none; margin-top: 15px; padding: 15px; background: #e8f8f5; border-left: 5px solid #1abc9c; border-radius: 6px; }
+  .note { color: #c0392b; font-size: 0.95em; font-weight: bold; margin-top: 8px; }
+  .counter { float: right; font-size: 0.8em; background: rgba(255,255,255,0.2); padding: 2px 8px; border-radius: 10px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <h1>🎓 Luyện Dịch Nga - Việt Chuyên Sâu</h1>
+  <div class="tabs" id="tabs"></div>
+  <div id="content"></div>
+</div>
+
+<script>
+  // ==========================================
+  // KHU VỰC DỮ LIỆU CHUNG (FORM TRỐNG)
+  // Bạn sẽ thay thế nội dung mảng bên trong tương ứng với từng buổi
+  // ==========================================
+  const courseData = {
+    orgs: {
+      title: "🏛️ Tổ chức",
+      items: [
+        {ru: "Министерство обороны", vn: "Bộ Quốc phòng"},
+        {ru: "Вьетнамо-Российский тропический центр", vn: "Trung tâm Nhiệt đới Việt - Nga"},
+        {ru: "Министерство промышленности и торговли", vn: "Bộ Công Thương"},
+        {ru: "Министерство науки и технологий", vn: "Bộ Khoa học và Công nghệ"},
+        {ru: "Национальное собрание Вьетнама", vn: "Quốc hội Việt Nam"},
+        {ru: "Центральный банк", vn: "Ngân hàng Trung ương"},
+        {ru: "Межправительственная комиссия по торгово-экономическому сотрудничеству", vn: "Ủy ban Liên chính phủ về hợp tác kinh tế - thương mại"},
+        {ru: "Главное таможенное управление", vn: "Tổng cục Hải quan"},
+        {ru: "Министерство сельского хозяйства и аграрного развития", vn: "Bộ Nông nghiệp và Phát triển Nông thôn"},
+        {ru: "Международное агентство по атомной энергии (МАГАТЭ)", vn: "Cơ quan Năng lượng Nguyên tử Quốc tế"}
+      ]
+    },
+    1: {
+      title: "Buổi 1: KT Vĩ mô",
+      vocab: [
+        {ru: "Валовой внутренний продукт (ВВП)", vn: "Tổng sản phẩm quốc nội (GDP)"},
+        {ru: "Отечественная промышленность", vn: "Ngành công nghiệp trong nước"},
+        {ru: "Оборот розничной торговли", vn: "Tổng mức bán lẻ"},
+        {ru: "Федеральный бюджет", vn: "Ngân sách liên bang"},
+        {ru: "Инфраструктурный каркас", vn: "Cơ sở hạ tầng"},
+        {ru: "Координация действий", vn: "Phối hợp hành động"},
+        {ru: "Департамент статистики", vn: "Tổng cục Thống kê (Cục Thống kê)"},
+        {ru: "Добавленная стоимость", vn: "Giá trị gia tăng"},
+        {ru: "Макроэкономика", vn: "Kinh tế vĩ mô"},
+        {ru: "Нормальное соотношение спроса и предложения", vn: "Cán cân cung-cầu ổn định"},
+        {ru: "Продовольственная безопасность", vn: "An ninh lương thực"},
+        {ru: "Социальное обеспечение", vn: "An sinh xã hội"},
+        {ru: "Международный валютный фонд (МВФ)", vn: "Quỹ Tiền tệ Quốc tế (IMF)"},
+        {ru: "Азиатский банк развития (АБР)", vn: "Ngân hàng Phát triển Châu Á (ADB)"},
+        {ru: "Всемирный банк (ВБ)", vn: "Ngân hàng Thế giới (WB)"},
+        {ru: "Положительное сальдо (торгового баланса)", vn: "Thặng dư thương mại (Cán cân thương mại dương)"},
+        {ru: "Прямые иностранные инвестиции (ПИИ)", vn: "Đầu tư trực tiếp nước ngoài (FDI)"},
+        {ru: "Розничная выручка / торговля", vn: "Doanh thu bán lẻ / Thương mại bán lẻ"},
+        {ru: "Финансовые эксперты", vn: "Chuyên gia tài chính"},
+        {ru: "Потребительская активность", vn: "Hoạt động tiêu dùng"}
+      ],
+      structs: [
+        {ru: "сообщить о росте ... на ... %", vn: "thông báo về mức tăng ... thêm ... %"},
+        {ru: "чувствовать себя уверенно, видеть перспективы", vn: "có tốc độ tăng trưởng tốt và có nhiều triển vọng"},
+        {ru: "позитивно отражаться на ...", vn: "ảnh hưởng tích cực đến ..."},
+        {ru: "превысить показатели прошлого года на ...", vn: "vượt qua các chỉ số của năm ngoái ...%"},
+        {ru: "отвечать внутреннему спросу", vn: "đáp ứng nhu cầu trong nước"},
+        {ru: "достичь рекордного уровня", vn: "đạt mức kỷ lục"},
+        {ru: "лидировать по темпам роста", vn: "dẫn đầu về tốc độ tăng trưởng"},
+        {ru: "демонстрировать хорошие показатели", vn: "cho thấy những con số khả quan / kết quả tích cực"},
+        {ru: "находиться под контролем на приемлемом уровне", vn: "được kiểm soát ở mức hợp lý"},
+        {ru: "оставаться надежной опорой экономики", vn: "vẫn tiếp tục là trụ cột vững chắc của nền kinh tế"},
+        {ru: "обеспечивать бесперебойное снабжение", vn: "đảm bảo cung ứng không gián đoạn"},
+        {ru: "осуществляться своевременно и повсеместно", vn: "được tiến hành kịp thời và đồng bộ trên cả nước"},
+        {ru: "опережать Сингапур и Малайзию", vn: "vượt qua Singapore và Malaysia"},
+        {ru: "по предварительной оценке", vn: "theo đánh giá/ước tính sơ bộ"},
+        {ru: "получить большую пользу от соглашений", vn: "hưởng lợi lớn từ các hiệp định"},
+        {ru: "являться одной из немногих экономик", vn: "là một trong những nền kinh tế hiếm hoi"},
+        {ru: "удерживаться на уровне менее ...", vn: "được giữ vững dưới mức ..."},
+        {ru: "увеличиться в 2 раза (удвоиться)", vn: "tăng gấp đôi"},
+        {ru: "что было ниже аналогичного", vn: "điều đó thấp hơn so với cùng kỳ/chỉ số tương tự"},
+        {ru: "свидетельствовать о дальнейшем укреплении", vn: "cho thấy sự củng cố hơn nữa trong tương lai"}
+      ],
+      exercises: [
+        // 10 CÂU NGA -> VIỆT (Gộp 2-3 ý từ bản gốc)
+        { dir: "🇷🇺 -> 🇻🇳", q: "Путин сообщил о росте ВВП на 4,6% и стабильной ситуации в экономике РФ: отечественная промышленность, сельское хозяйство и сфера услуг чувствуют себя уверенно, а за полгода оборот розничной торговли увеличился на 8,8%.", a: "Tổng thống Putin cho biết GDP tăng 4,6% và tình hình kinh tế Nga đang duy trì ổn định: ngành công nghiệp trong nước, nông nghiệp và dịch vụ có triển vọng tốt, trong khi tổng mức bán lẻ 6 tháng tăng 8,8%.", note: "Ghép các số liệu 4,6% và 8,8% từ Text 1. Từ nối 'а' ở đây dịch là 'trong khi/còn'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Рост экономики позитивно отражается на федеральном бюджете, доходы которого превысили показатели прошлого года на 36%, поэтому властям следует укреплять инфраструктурный каркас и поддерживать создание новых рабочих мест.", a: "Tăng trưởng kinh tế ảnh hưởng tích cực đến ngân sách liên bang, với nguồn thu vượt năm ngoái 36%, do đó chính quyền cần củng cố cơ sở hạ tầng và hỗ trợ tạo việc làm mới.", note: "Mệnh đề phụ 'доходы которого' thay cho 'nguồn thu của nó (ngân sách)'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Президент призвал правительство и Центральный банк повысить координацию действий по снижению инфляции, чтобы объем предложения товаров и услуг полностью отвечал внутреннему спросу.", a: "Tổng thống kêu gọi chính phủ và Ngân hàng Trung ương tăng cường phối hợp hành động để giảm lạm phát, nhằm đảm bảo nguồn cung hàng hóa và dịch vụ đáp ứng hoàn toàn nhu cầu trong nước.", note: "Sử dụng 'чтобы' + động từ chia theo ngôi để chỉ mục đích." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "ВВП Вьетнама за первые 6 месяцев достиг 7,52% рекордного уровня, благодаря чему страна лидирует по темпам роста среди стран Юго-Восточной Азии, а сельскохозяйственное, лесное и рыбное хозяйство сохраняют стабильный рост.", a: "GDP Việt Nam trong 6 tháng đầu năm đạt mức kỷ lục 7,52%, nhờ đó VN dẫn đầu về tốc độ tăng trưởng ở Đông Nam Á, trong khi nông, lâm, thủy sản vẫn duy trì tăng trưởng ổn định.", note: "Cụm 'благодаря чему' (nhờ điều đó/nhờ vậy) rất hay dùng để nối ý kết quả tích cực." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Промышленность и строительство демонстрируют хорошие показатели, и статистика свидетельствует, что макроэкономика страны по-прежнему стабильна, а инфляция находится под контролем на приемлемом уровне.", a: "Ngành công nghiệp và xây dựng cho thấy kết quả khả quan, và số liệu thống kê chứng minh kinh tế vĩ mô của đất nước vẫn ổn định, còn lạm phát được kiểm soát ở mức hợp lý.", note: "Ghép ý về công nghiệp, vĩ mô và lạm phát từ Text 2." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Обеспечивается продовольственная безопасность и бесперебойное снабжение внутреннего рынка необходимыми товарами, при этом внутреннее потребление продолжает демонстрировать хороший рост.", a: "An ninh lương thực và việc cung ứng không gián đoạn hàng hóa thiết yếu cho thị trường trong nước được đảm bảo, đồng thời tiêu dùng nội địa tiếp tục cho thấy sự tăng trưởng tốt.", note: "'при этом' (đồng thời) nối 2 vế diễn ra song song." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Согласно докладу МВФ, экономика Вьетнама может занять 6-ое место среди стран Юго-Восточной Азии, опережая Сингапур, а по предварительной оценке, ВВП Вьетнама в 2025 году может составить 340,6 млрд долларов США.", a: "Theo báo cáo của IMF, nền kinh tế Việt Nam có thể đứng thứ 6 ĐNA, vượt qua Singapore, và theo đánh giá sơ bộ, GDP Việt Nam năm 2025 ước tính đạt 340,6 tỷ USD.", note: "Ghép mục 1 và 2 của Text 4, dùng trạng động từ 'опережая' (vượt qua)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В последнем отчёте Всемирного банка отмечается, что экономика Вьетнама может быть быстрее восстановлена, являясь одной из немногих экономик с высокими темпами роста, где инфляция удерживается на уровне менее 4%.", a: "Báo cáo mới nhất của WB nhấn mạnh rằng kinh tế VN có thể phục hồi nhanh hơn, là một trong số ít nền kinh tế có tốc độ tăng trưởng cao, nơi lạm phát được giữ dưới mức 4%.", note: "Trạng động từ 'являясь' (đóng vai trò là / là)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Положительное сальдо торгового баланса составляет около 17 млрд долл. США, а прямые иностранные инвестиции остаются велики, составив 1,65 млрд долларов только в сентябре.", a: "Thặng dư thương mại đạt khoảng 17 tỷ USD, và đầu tư trực tiếp nước ngoài vẫn ở mức cao, đạt 1,65 tỷ USD chỉ tính riêng trong tháng 9.", note: "Từ 'велики' là dạng ngắn đuôi của tính từ (cao/lớn)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Высокие темпы роста экономики сохраняются во втором и третьем кварталах, что является сигналом дальнейшего укрепления и восстановления вьетнамской экономики в будущем.", a: "Tốc độ tăng trưởng kinh tế cao được duy trì trong quý 2 và quý 3, đây là tín hiệu cho thấy sự phục hồi và củng cố hơn nữa của nền kinh tế Việt Nam trong tương lai.", note: "Đại từ 'что' thay thế cho toàn bộ sự việc ở vế trước." },
+
+        // 10 CÂU VIỆT -> NGA (Gộp 2-3 ý từ bản gốc)
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nền kinh tế Nga tiếp tục cho thấy tốc độ tăng trưởng tốt, GDP 6 tháng đầu năm tăng 4,6%, điều này ảnh hưởng tích cực đến ngân sách liên bang với doanh thu tăng 36% so với năm ngoái.", a: "Российская экономика продолжает показывать хорошие темпы роста, ВВП за первые шесть месяцев прибавил 4,6%, что позитивно отражается на федеральном бюджете, доходы которого превысили показатели прошлого года на 36%.", note: "Dùng mệnh đề 'доходы которого' thay cho 'nguồn thu của nó'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Chính quyền cần củng cố cơ sở hạ tầng và hỗ trợ doanh nghiệp, trong khi đó Ngân hàng Trung ương phải tăng cường phối hợp hành động để giảm lạm phát, đáp ứng nhu cầu trong nước.", a: "Властям следует укреплять инфраструктурный каркас и поддерживать бизнес, в то время как Центральный банк должен повысить координацию действий по снижению инфляции, чтобы отвечать внутреннему спросу.", note: "'Властям следует...' (Chính quyền cần phải...) + Dative." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Quý II năm nay GDP tăng 7,96%, và tính chung 6 tháng đầu năm đạt mức kỷ lục 7,52%, giúp Việt Nam dẫn đầu về tốc độ tăng trưởng GDP tại khu vực Đông Nam Á.", a: "За второй квартал ВВП увеличился на 7,96%, а по итогам первого полугодия достиг рекордного уровня в 7,52%, что позволяет Вьетнаму лидировать по темпам роста ВВП среди стран Юго-Восточной Азии.", note: "Cụm 'что позволяет...' (điều đó cho phép / giúp...)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Ngành nông nghiệp, lâm nghiệp và thủy sản vẫn duy trì mức tăng trưởng ổn định, đảm bảo xuất khẩu, đồng thời giá trị gia tăng của toàn ngành công nghiệp đã tăng 8,07%.", a: "Сельскохозяйственное, лесное и рыбное хозяйство сохраняют стабильный рост, обеспечивая экспорт, при этом добавленная стоимость всей промышленности выросла на 8,07%.", note: "Sử dụng 'при этом' (đồng thời) để nối sang số liệu công nghiệp 8,07%." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "An ninh lương thực được đảm bảo, nông nghiệp tiếp tục là điểm tựa vững chắc, và sản xuất công nghiệp đạt mức tăng trưởng cao nhất trong 5 năm qua.", a: "Обеспечивается продовольственная безопасность, сельское хозяйство остается надежной опорой, а промышленное производство достигло самого высокого уровня роста за последние 5 лет.", note: "Liệt kê song song 3 ý chính từ Text 2." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Theo dự báo của ADB, tăng trưởng kinh tế Việt Nam sẽ đạt 8%, cao hơn dự báo của IMF, bởi vì đất nước sẽ nhận được nhiều lợi ích từ các hiệp định thương mại tự do với EU.", a: "По прогнозам АБР, рост экономики Вьетнама достигнет 8%, что выше прогноза МВФ, поскольку страна получит большую пользу от соглашений о свободной торговле с ЕС.", note: "'поскольку' (bởi vì) dùng để giải thích lý do." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Báo cáo của WB cho thấy kinh tế VN có thể phục hồi nhanh hơn, duy trì lạm phát dưới 4% và giữ thặng dư thương mại ở mức gần 17 tỷ USD.", a: "Отчёт ВБ показывает, что экономика Вьетнама может быстрее восстановиться, удерживая инфляцию на уровне менее 4% и сохраняя положительное сальдо на уровне около 17 млрд долл. США.", note: "Sử dụng 2 trạng động từ liên tiếp 'удерживая... и сохраняя...' (duy trì... và giữ...)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Tốc độ tăng trưởng được duy trì trong quý II và III khi sản xuất công nghiệp tăng gấp đôi, mặc dù lạm phát trong tháng 9 là 3,2%, giảm so với tháng 7 và 8.", a: "Высокие темпы роста сохраняются во втором и третьем кварталах, когда показатели промышленного производства удвоились, хотя инфляция в сентябре составила 3,2%, что было ниже аналогичного в июле и августе.", note: "Liên từ 'когда' (khi) và 'хотя' (mặc dù) để nối các mốc thời gian và dữ kiện." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Cán cân cung-cầu được đảm bảo ổn định, thu nhập bình quân của người lao động tăng, và các biện pháp đảm bảo an sinh xã hội được tiến hành kịp thời và đồng bộ trên cả nước.", a: "Обеспечено нормальное соотношение спроса и предложения, среднемесячный доход работающих вырос, а меры по социальному обеспечение осуществляются своевременно и повсеместно в стране.", note: "Cụm 'своевременно и повсеместно' (kịp thời và đồng bộ/khắp nơi)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Đầu tư trực tiếp nước ngoài trong tháng 9 đạt 1,65 tỷ USD, thặng dư thương mại đạt 16,8 tỷ, điều này khiến nhiều chuyên gia tài chính đưa ra nhận định tích cực về triển vọng tăng trưởng.", a: "Прямые иностранные инвестиции в сентябре составили 1,65 млрд долларов, положительное сальдо достигло 16,8 млрд, что заставляет многих финансовых экспертов давать позитивный прогноз перспектив роста.", note: "'что заставляет...' (điều đó khiến cho...)." }
+      ]
+    },
+    2: {
+      title: "Buổi 2: Xuất nhập khẩu",
+      vocab: [
+        {ru: "Положительное сальдо (внешней торговли)", vn: "Thặng dư thương mại / Xuất siêu"},
+        {ru: "Общий товарооборот", vn: "Tổng kim ngạch thương mại"},
+        {ru: "Экспортные приоритеты", vn: "Các mặt hàng ưu tiên xuất khẩu"},
+        {ru: "География поставок", vn: "Thị trường xuất khẩu / Phạm vi cung cấp"},
+        {ru: "Национальный бренд", vn: "Thương hiệu quốc gia"},
+        {ru: "Несырьевой экспорт", vn: "Xuất khẩu phi tài nguyên"},
+        {ru: "Зона свободной торговли", vn: "Khu vực thương mại tự do"},
+        {ru: "Иностранные инвестиции", vn: "Đầu tư nước ngoài (FDI)"},
+        {ru: "Минеральные продукты", vn: "Các mặt hàng khoáng sản"},
+        {ru: "Сельскохозяйственная продукция", vn: "Hàng nông sản"},
+        {ru: "Транспортные средства", vn: "Phương tiện vận tải"},
+        {ru: "Внешнеторговая стратегия", vn: "Chiến lược ngoại thương"},
+        {ru: "Деловые связи", vn: "Mối quan hệ kinh doanh"},
+        {ru: "Ключевой партнер", vn: "Đối tác then chốt"},
+        {ru: "Перспективный рынок", vn: "Thị trường tiềm năng"},
+        {ru: "Строительные материалы", vn: "Vật liệu xây dựng"},
+        {ru: "Программное обеспечение", vn: "Phần mềm (hệ thống)"},
+        {ru: "ИТ-продукция", vn: "Sản phẩm công nghệ thông tin"},
+        {ru: "Представители бизнеса и власти", vn: "Đại diện giới doanh nghiệp và chính quyền"},
+        {ru: "Позитивный имидж", vn: "Hình ảnh tích cực"}
+      ],
+      structs: [
+        {ru: "сократиться / снизиться на ... до ...", vn: "giảm ... xuống còn ..."},
+        {ru: "вырасти / увеличиться на ... до ...", vn: "tăng ... đạt mức ..."},
+        {ru: "остаться на прежнем уровне", vn: "duy trì ở mức cũ / giữ nguyên"},
+        {ru: "в структуре экспорта наибольшую долю заняли ...", vn: "trong cơ cấu xuất khẩu ... chiếm tỷ trọng lớn nhất"},
+        {ru: "второй по величине статьей экспорта стали ...", vn: "mặt hàng xuất khẩu lớn thứ hai là ..."},
+        {ru: "крупнейшей статьей импорта остаются ...", vn: "mặt hàng nhập khẩu lớn nhất là ..."},
+        {ru: "перестраивать экспортные приоритеты", vn: "tái cơ cấu mặt hàng ưu tiên xuất khẩu"},
+        {ru: "объединить усилия по продвижению продукции", vn: "chung tay nỗ lực quảng bá sản phẩm"},
+        {ru: "вступить в силу", vn: "có hiệu lực (hiệp định, luật)"},
+        {ru: "являться важным направлением сотрудничества", vn: "là hướng hợp tác quan trọng"},
+        {ru: "по сравнению с аналогичным периодом прошлого года", vn: "so với cùng kỳ năm ngoái"},
+        {ru: "приходиться на долю", vn: "thuộc về phần / chiếm tỷ trọng"},
+        {ru: "свидетельствовать о большом потенциале", vn: "cho thấy tiềm năng lớn / dư địa lớn"},
+        {ru: "быть посвященным чему-либо", vn: "tập trung vào vấn đề gì / dành cho"},
+        {ru: "быть направленным на формирование", vn: "nhằm xây dựng / hướng tới việc tạo lập"},
+        {ru: "далее следуют ...", vn: "tiếp theo là ..."},
+        {ru: "в результате", vn: "do đó / kết quả là"},
+        {ru: "при этом / тогда как", vn: "trong khi đó / đồng thời"},
+        {ru: "содействовать налаживанию связей", vn: "tạo điều kiện thiết lập các mối quan hệ"},
+        {ru: "в том числе", vn: "trong đó có / bao gồm cả"}
+      ],
+      exercises: [
+        // 10 CÂU NGA -> VIỆT (PHỨC HỢP)
+        { dir: "🇷🇺 -> 🇻🇳", q: "Положительное сальдо внешней торговли России сократилось на 14,13% и составило 86,3 млрд долларов США, в результате общий товарооборот уменьшился на 3,24%.", a: "Thặng dư thương mại của Nga giảm 14,13% và đạt mức 86,3 tỷ USD, do đó tổng kim ngạch thương mại đã giảm 3,24%.", note: "Sử dụng 'в результате' để nối nguyên nhân - kết quả rất mượt mà." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Экспорт в страны Азии снизился на 2,68%, составив 203,6 млрд долларов, тогда как импорт из стран Африки вырос на 33,25%, до 3 млрд долларов.", a: "Xuất khẩu sang các nước châu Á giảm 2,68% xuống còn 203,6 tỷ đô la, trong khi đó nhập khẩu từ các nước châu Phi tăng 33,25%, đạt mức 3 tỷ đô la.", note: "Từ nối 'тогда как' thể hiện sự tương phản (trong khi đó). Chú ý giới từ 'до' mang nghĩa 'đạt mức/còn lại'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В структуре экспорта наибольшую долю заняли минеральные продукты, а второй по величине статьей стали металлы и изделия из них, объем которых вырос на 18,13%.", a: "Trong cơ cấu xuất khẩu, các mặt hàng khoáng sản chiếm tỷ trọng lớn nhất, còn mặt hàng xuất khẩu lớn thứ hai là kim loại và các sản phẩm từ kim loại, với khối lượng tăng 18,13%.", note: "Mệnh đề phụ 'объем которых' (khối lượng của chúng)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Крупнейшей статьей импорта остаются машины, оборудование и транспортные средства, далее следуют химическая продукция и сельскохозяйственные товары с ростом импорта.", a: "Mặt hàng nhập khẩu lớn nhất vẫn là máy móc, thiết bị và phương tiện vận tải, tiếp theo là các sản phẩm hóa chất và hàng nông sản có mức nhập khẩu tăng.", note: "Cụm 'далее следуют' (tiếp theo là) dùng để liệt kê thứ tự." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Россия перестраивает экспортные приоритеты и расширяет географию поставок, а дискуссия была посвящена внешнеторговым перспективам и поиску новых рынков.", a: "Nga đang tái cơ cấu các mặt hàng ưu tiên xuất khẩu và mở rộng thị trường xuất khẩu, và buổi thảo luận đã tập trung vào các triển vọng thương mại và việc tìm kiếm thị trường mới.", note: "Cấu trúc 'была посвящена' (tập trung vào / dành cho) + Dative (Cách 3)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Программа «Сделано в России» призвана объединить усилия по продвижению отечественной продукции под единым национальным брендом и сформировать позитивный имидж товаров за рубежом.", a: "Chương trình 'Made in Russia' nhằm mục đích chung tay nỗ lực quảng bá sản phẩm trong nước dưới một thương hiệu quốc gia duy nhất và xây dựng hình ảnh tích cực của hàng hóa tại nước ngoài.", note: "'призвана объединить' = được kêu gọi/có sứ mệnh nhằm hợp nhất nỗ lực." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "После вступления в силу Соглашения о свободной торговле между Вьетнамом и ЕАЭС товарооборот демонстрировал значительный рост, что объясняется открытым сотрудничеством между партнерами.", a: "Sau khi Hiệp định Thương mại Tự do giữa Việt Nam và Liên minh Kinh tế Á-Âu có hiệu lực, kim ngạch thương mại đã tăng trưởng đáng kể, điều này là do sự hợp tác cởi mở giữa các đối tác.", note: "'что объясняется' (điều này được giải thích là do...)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В 2023 году объем внешней торговли достиг 3,63 млрд долларов США, увеличившись на 2,3%, при этом экспорт вьетнамских товаров в Россию составил 1,74 млрд долларов США, увеличившись на 12%.", a: "Năm 2023, kim ngạch ngoại thương đạt 3,63 tỷ USD, tăng 2,3%, đồng thời xuất khẩu hàng hóa Việt Nam sang Nga đạt 1,74 tỷ USD, tăng 12%.", note: "Sử dụng trạng động từ 'увеличившись на' để diễn đạt ý 'tăng thêm'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам всегда является важным направлением сотрудничества для Москвы и одним из ключевых партнёров, на долю которого приходится около 20% несырьевого экспорта в этот регион.", a: "Việt Nam luôn là hướng hợp tác quan trọng đối với Moscow và là một trong những đối tác then chốt, chiếm khoảng 20% tổng lượng xuất khẩu phi tài nguyên sang khu vực này.", note: "'на долю которого приходится' (thuộc về phần của nó / nó chiếm)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "С населением более 100 миллионов человек Вьетнам является перспективным рынком для ИТ-продукции, однако в настоящее время действует лишь около 900 тысяч предприятий с иностранными инвестициями.", a: "Với dân số hơn 100 triệu người, Việt Nam là thị trường đầy tiềm năng cho các sản phẩm CNTT, tuy nhiên hiện tại chỉ có khoảng 900 nghìn doanh nghiệp có vốn đầu tư nước ngoài đang hoạt động.", note: "Cấu trúc 'С населением...' dịch là 'Với dân số...'." },
+
+        // 10 CÂU VIỆT -> NGA (PHỨC HỢP)
+        { dir: "🇻🇳 -> 🇷🇺", q: "Trong 8 tháng đầu năm, kim ngạch xuất khẩu giảm 14,5 tỷ đô la còn 264,2 tỷ đô la, trong khi đó xuất khẩu sang các nước Châu Mỹ duy trì ở mức cũ là 8,5 tỷ đô la.", a: "За первые восемь месяцев экспорт снизился на 14,5 млрд долларов и достиг 264,2 млрд долларов, в то время как экспорт в страны Северной и Южной Америки остался на прежнем уровне в 8,5 млрд долларов.", note: "Sử dụng 'в то время как' và 'остался на прежнем уровне'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Mặt hàng nhập khẩu lớn nhất là máy móc, thiết bị và phương tiện vận tải, tiếp theo là các sản phẩm hóa chất và hàng nông sản đang có dấu hiệu tăng trưởng.", a: "Крупнейшей статьей импорта остаются машины, оборудование и транспортные средства, далее следуют химическая продукция и сельскохозяйственные товары с ростом импорта.", note: "Nhớ dùng 'далее следуют' (tiếp theo là)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nga vẫn đang đẩy mạnh chiến lược thương mại, tái cơ cấu các mặt hàng ưu tiên xuất khẩu và mở rộng các biện pháp hỗ trợ doanh nghiệp nhằm tìm kiếm thị trường mới.", a: "Россия продолжает активно развивать внешнеторговую стратегию, перестраивает экспортные приоритеты и расширяет инструменты поддержки бизнеса для поиска новых рынков.", note: "Dùng các động từ song song cùng thì hiện tại (развивать, перестраивает, расширяет)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Buổi thảo luận diễn ra tại trung tâm thương mại quốc tế Moskva với sự tham gia của đại diện giới doanh nghiệp và chính quyền, tập trung vào triển vọng thương mại của Nga.", a: "Дискуссия, прошедшая в московском Центре международной торговли с участием представителей бизнеса и власти, была посвящена внешнеторговым перспективам России.", note: "Dùng phân từ (причастие) 'прошедшая' để rút gọn mệnh đề phụ 'vừa diễn ra'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Mục đích của chương trình là cùng chung tay nỗ lực quảng bá hàng hóa dưới một thương hiệu chung và xây dựng hình ảnh tích cực tại thị trường nước ngoài.", a: "Программа призвана объединить усилия по продвижению отечественной продукции под единым национальным брендом и сформировать позитивный имидж за рубежом.", note: "'призвана' + nguyên thể: có sứ mệnh / nhằm mục đích." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Kể từ khi Hiệp định Thương mại Tự do có hiệu lực, kim ngạch xuất nhập khẩu đã tăng đáng kể, đạt 1,96 tỷ USD trong 5 tháng đầu năm 2024, tăng 51,4% so với cùng kỳ.", a: "После вступления в силу Соглашения о свободной торговле, двусторонний товарооборот продемонстрировал значительный рост, достигнув 1,96 млрд долларов за первые 5 месяцев 2024 года, что на 51,4% больше по сравнению с аналогичным периодом.", note: "Nối ý 'tăng 51,4%' bằng mệnh đề 'что на 51,4% больше'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Trong đó, xuất khẩu từ Việt Nam sang Nga đạt 955,6 triệu USD, tăng 44,7%, còn nhập khẩu từ Nga vào Việt Nam đạt 1 tỷ USD, tăng 58,4%.", a: "При этом экспорт из Вьетнама в Россию составил 955,6 млн долларов, увеличившись на 44,7%, а импорт из России во Вьетнам - 1 млрд долларов, рост на 58,4%.", note: "Sử dụng trạng động từ 'увеличившись на' để diễn tả con số tăng thêm." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Chuyến công tác nhằm tạo điều kiện thiết lập các mối quan hệ kinh doanh, tìm hiểu thị trường và đối tác, bởi Việt Nam là một trong những đối tác then chốt của Nga tại khu vực.", a: "Миссия направлена на содействие налаживанию деловых связей, изучение рынка и поиск партнёров, поскольку Вьетнам является одним из ключевых партнеров России в регионе.", note: "Liên từ 'поскольку' (bởi vì) rất phù hợp cho văn phong trang trọng." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Các doanh nghiệp Nga đánh giá Việt Nam là thị trường đầy tiềm năng cho các sản phẩm công nghệ thông tin, phần mềm, vật liệu xây dựng và mỹ phẩm.", a: "Российские предприятия считают Вьетнам перспективным рынком для экспорта ИТ-продукции, программного обеспечения, строительных материалов и косметики.", note: "Cấu trúc 'считать + Cách 4 + Cách 5' (đánh giá cái gì là cái gì)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Với dân số hơn 100 triệu người nhưng chỉ có khoảng 900 nghìn doanh nghiệp FDI, điều này cho thấy tiềm năng to lớn cho các nhà đầu tư nước ngoài, trong đó có Nga.", a: "С населением более 100 миллионов человек, но имея лишь около 900 тысяч предприятий с иностранными инвестициями, это свидетельствует о большом потенциале для иностранных инвесторов, в том числе из России.", note: "'это свидетельствует о...' (điều này cho thấy/làm minh chứng cho...)." }
+      ]
+    },
+    3: {
+      title: "Buổi 3: COVID & Đầu tư",
+      vocab: [
+        {ru: "Инвестиционная привлекательность", vn: "Sức hấp dẫn đầu tư"},
+        {ru: "Прямые иностранные инвестиции (ПИИ)", vn: "Đầu tư trực tiếp nước ngoài (FDI)"},
+        {ru: "Запланированные объемы инвестиций", vn: "Khoản đầu tư dự kiến (khối lượng đầu tư)"},
+        {ru: "Неопределенная обстановка", vn: "Tình hình bất ổn"},
+        {ru: "Цифровые технологии", vn: "Công nghệ số"},
+        {ru: "Деловые услуги", vn: "Dịch vụ doanh nghiệp"},
+        {ru: "Инвестиционная активность", vn: "Hoạt động đầu tư"},
+        {ru: "Существенное сокращение", vn: "Sự cắt giảm mạnh/đáng kể"},
+        {ru: "Мировая экономика", vn: "Kinh tế toàn cầu"},
+        {ru: "Приток ПИИ", vn: "Dòng vốn FDI (sự đổ vào của vốn FDI)"},
+        {ru: "Взрывной рост спроса", vn: "Nhu cầu tăng vọt (sự bùng nổ nhu cầu)"},
+        {ru: "Медико-биологическая отрасль", vn: "Ngành y sinh học"},
+        {ru: "Производственные мощности", vn: "Cơ sở sản xuất / Năng lực sản xuất"},
+        {ru: "Агропродовольственный сектор", vn: "Ngành nông nghiệp và thực phẩm"},
+        {ru: "Зарегистрированный объем капитала", vn: "Tổng vốn đầu tư đăng ký"},
+        {ru: "Перерабатывающая отрасль", vn: "Ngành công nghiệp chế biến"},
+        {ru: "Новые инвестиционные проекты", vn: "Dự án đầu tư mới"},
+        {ru: "Инвестировать за рубеж", vn: "Đầu tư ra nước ngoài"},
+        {ru: "Серьезный урон", vn: "Thiệt hại nghiêm trọng"},
+        {ru: "Спад в экономике", vn: "Sự suy thoái kinh tế"}
+      ],
+      structs: [
+        {ru: "в связи с пандемией / из-за пандемии", vn: "do đại dịch"},
+        {ru: "дойти до стадии реализации", vn: "đi đến giai đoạn thực hiện / được triển khai"},
+        {ru: "реализовать в срок", vn: "thực hiện đúng hạn"},
+        {ru: "представлять наибольшую привлекательность для", vn: "thu hút sự quan tâm lớn nhất đối với"},
+        {ru: "выйти на 1-е место по количеству проектов", vn: "vươn lên đứng đầu về số lượng dự án"},
+        {ru: "внести коррективы во что-либо", vn: "điều chỉnh cái gì / sửa đổi kế hoạch"},
+        {ru: "нанести серьезный урон экономике", vn: "gây thiệt hại nghiêm trọng cho nền kinh tế"},
+        {ru: "оказать существенное влияние на ...", vn: "ảnh hưởng đáng kể đến ..."},
+        {ru: "вложить средства в проект", vn: "rót vốn (đầu tư) vào dự án"},
+        {ru: "предпочитать развивать уже существующий бизнес", vn: "mong muốn/ưa thích phát triển doanh nghiệp đã có"},
+        {ru: "разделить между собой второе место", vn: "cùng chia sẻ vị trí thứ hai"},
+        {ru: "по состоянию на (20 сентября)", vn: "tính đến (ngày 20 tháng 9)"},
+        {ru: "что составляет ... % показателя аналогичного периода", vn: "bằng ... % so với chỉ số cùng kỳ"},
+        {ru: "лидировать / занимать первое место", vn: "dẫn đầu / đứng thứ nhất"},
+        {ru: "на долю которого приходится ...", vn: "chiếm tỷ trọng / chiếm phần ..."},
+        {ru: "выйти с четвертого места на третье", vn: "vươn từ vị trí thứ 4 lên vị trí thứ 3"},
+        {ru: "по количеству новых проектов", vn: "xét theo số lượng dự án mới"},
+        {ru: "вкладывать средства за рубеж", vn: "đầu tư ra nước ngoài"},
+        {ru: "выглядеть весьма неплохо на этом фоне", vn: "tình hình trông khá khả quan trong bối cảnh đó"},
+        {ru: "иметь больше шансов на реализацию", vn: "có tính khả thi cao hơn / có nhiều cơ hội thực hiện hơn"}
+      ],
+      exercises: [
+        // 10 CÂU NGA -> VIỆT
+        { dir: "🇷🇺 -> 🇻🇳", q: "В связи с пандемией 10% проектов ПИИ в Европе отменены, а 73% компаний ожидают, что пандемия нанесет серьезный урон мировой экономике.", a: "Do đại dịch, 10% các dự án FDI tại châu Âu bị hủy bỏ, và 73% công ty dự đoán đại dịch sẽ gây thiệt hại nghiêm trọng cho nền kinh tế toàn cầu.", note: "Sử dụng 'ожидают, что' = dự đoán/kỳ vọng rằng." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В «мирное время» большинство проектов дошли бы до стадии реализации, однако вследствие неопределенной обстановки на рынке только 65% будут реализованы в срок, а четверть будет отложена.", a: "Nếu bình thường, hầu hết các dự án sẽ được triển khai, tuy nhiên do tình hình bất ổn trên thị trường, chỉ 65% sẽ được thực hiện đúng hạn, và 1/4 sẽ bị hoãn lại.", note: "'дошли бы' (thức giả định) diễn tả 'đáng lẽ ra đã đi đến giai đoạn...'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Наибольшую привлекательность для инвесторов представляли проекты в секторах цифровых технологий, при этом Франция впервые вышла на 1-е место в Европе по количеству проектов.", a: "Thu hút sự quan tâm lớn nhất của nhà đầu tư là các dự án công nghệ số, đồng thời Pháp lần đầu tiên vươn lên dẫn đầu châu Âu về số lượng dự án.", note: "'выйти на 1-е место' (vươn lên vị trí thứ nhất)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Спад в Европе окажет существенное влияние на приток ПИИ, поэтому больше шансов на реализацию сохраняется у проектов в медико-биологической отрасли, где наблюдается взрывной рост спроса.", a: "Suy thoái ở châu Âu sẽ ảnh hưởng đáng kể đến dòng vốn FDI, do đó các dự án trong ngành y sinh học, nơi có nhu cầu tăng vọt, sẽ có tính khả thi cao hơn.", note: "'взрывной рост' (sự tăng trưởng bùng nổ/tăng vọt)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В 2019 г. иностранные инвесторы вложили средства в 191 проект на территории России, и подавляющее большинство предпочитает вкладывать средства в развитие новых проектов и мощностей.", a: "Năm 2019, các nhà đầu tư nước ngoài đã rót vốn vào 191 dự án tại Nga, và phần lớn mong muốn đầu tư vào phát triển các dự án và cơ sở sản xuất mới.", note: "Chú ý phân biệt 'вложить' (đã rót vốn) và 'вкладывать' (đầu tư nói chung)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Лидером прошлого года стала Германия, реализовавшая 36 проектов, в то время как наиболее привлекательным сектором остается агропродовольственный сектор.", a: "Đức trở thành nhà đầu tư dẫn đầu năm ngoái với việc thực hiện 36 dự án, trong khi lĩnh vực hấp dẫn nhất vẫn là ngành nông nghiệp và thực phẩm.", note: "'реализовавшая' (phân từ chủ động quá khứ) = nước đã thực hiện." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "По состоянию на 20 сентября общий объём ПИИ во Вьетнам достиг 21,20 млрд долларов США, при этом лидирует перерабатывающая отрасль, на долю которой приходится 46,6% от общего объема.", a: "Tính đến 20/9, tổng vốn FDI vào VN đạt 21,20 tỷ USD, trong đó ngành công nghiệp chế biến dẫn đầu, chiếm 46,6% tổng vốn.", note: "Cụm 'на долю которой приходится' cực kỳ phổ biến khi nhắc đến tỷ trọng." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Сингапур лидирует с объемом в 6,77 млрд долларов США, Южная Корея занимает второе место, а в этом году Китай вышел с четвёртого места на третье.", a: "Singapore dẫn đầu với 6,77 tỷ USD, Hàn Quốc đứng thứ 2, và năm nay Trung Quốc đã vươn từ vị trí thứ 4 lên thứ 3.", note: "Cấu trúc 'выйти с ... на ... место' (vươn/nhảy từ vị trí nào lên vị trí nào)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Лидером по количеству новых проектов является Южная Корея, а среди 60 провинций Бакльеу по-прежнему занимает первое место, реализуя один крупный проект стоимостью 4 млрд долларов.", a: "Hàn Quốc dẫn đầu về số dự án mới, còn trong số 60 tỉnh thành, Bạc Liêu tiếp tục đứng thứ nhất với việc thực hiện một dự án lớn trị giá 4 tỷ USD.", note: "'реализуя' (trạng động từ chưa hoàn thành) giải thích cho hành động chính." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнамские инвесторы вложили средства за рубеж в 13 отраслей, и Германия лидирует с 4 новыми инвестиционными проектами, что составляет 21,4% от общего объёма.", a: "Các nhà đầu tư VN đã đầu tư ra nước ngoài vào 13 ngành, và Đức dẫn đầu với 4 dự án đầu tư mới, chiếm 21,4% tổng khối lượng đầu tư.", note: "Đại từ 'что' thay thế cho toàn bộ sự việc ở phía trước." },
+
+        // 10 CÂU VIỆT -> NGA
+        { dir: "🇻🇳 -> 🇷🇺", q: "Do đại dịch COVID-19, 10% các dự án thu hút FDI tại châu Âu bị hủy bỏ, trong bối cảnh này tình hình đầu tư của Nga vẫn khá khả quan vì 65% dự án được xác nhận sẽ thực hiện.", a: "В связи с пандемией COVID-19 10% проектов ПИИ в Европе отменены, на этом фоне Россия выглядит весьма неплохо, так как реализация 65% подтверждена.", note: "'На этом фоне' (Trong bối cảnh đó/Trên nền tảng đó)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Thu hút sự quan tâm lớn nhất là các dự án công nghệ số, đồng thời Pháp đã vươn lên dẫn đầu châu Âu về số lượng dự án có vốn FDI, vượt qua Vương quốc Anh.", a: "Наибольшую привлекательность представляли проекты в секторах цифровых технологий, при этом Франция вышла на 1-е место в Европе по количеству проектов с ПИИ, сместив Великобританию.", note: "Dùng trạng động từ 'сместив' (hất cẳng/thay thế/vượt qua)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hơn 70% công ty dự đoán đại dịch sẽ gây thiệt hại nghiêm trọng cho nền kinh tế toàn cầu, tuy nhiên lĩnh vực y sinh học lại có nhu cầu tăng vọt.", a: "Более 70% компаний ожидают, что пандемия нанесет серьезный урон мировой экономике, однако в медико-биологической отрасли наблюдается взрывной рост спроса.", note: "'наблюдается' (quan sát thấy/chứng kiến)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Năm ngoái, các nhà đầu tư nước ngoài đã rót vốn vào 191 dự án tại Nga, trong đó Đức là nhà đầu tư lớn nhất, còn Pháp và Trung Quốc cùng chia sẻ vị trí thứ hai.", a: "В прошлом году иностранные инвесторы вложили средства в 191 проект в России, где лидером стала Германия, а Франция и Китай разделили между собой второе место.", note: "Cấu trúc 'разделили между собой' (cùng nhau chia sẻ)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Ngành nông nghiệp và thực phẩm vẫn là lĩnh vực hấp dẫn nhất đối với các nhà đầu tư nước ngoài tại Nga, trong khi công nghệ số đã tụt xuống vị trí thứ 7.", a: "Наиболее привлекательным для иностранных инвесторов в России остается агропродовольственный сектор, в то время как цифровые технологии опустились на 7-е место.", note: "Động từ 'опуститься' (tụt xuống/rớt xuống)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Tính đến 20/9, tổng vốn đầu tư nước ngoài vào Việt Nam đạt 21,20 tỷ USD, bằng 81,1% so với cùng kỳ, và các nhà đầu tư đã rót vốn vào 18 ngành.", a: "По состоянию на 20 сентября общий объём ПИИ во Вьетнам достиг 21,20 млрд долларов США, что составляет 81,1% показателя аналогичного периода, и инвесторы вложили средства в 18 отраслей.", note: "Chú ý chia cách: 'показателя' (Cách 2) do đi sau 'составляет %'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Lĩnh vực công nghiệp chế biến dẫn đầu chiếm 46,6% tổng vốn, trong đó Singapore là nhà đầu tư lớn nhất, tiếp theo là Hàn Quốc và Trung Quốc.", a: "Лидирует перерабатывающая отрасль, на долю которой приходится 46,6% капитала, при этом Сингапур является крупнейшим инвестором, за ним следуют Южная Корея и Китай.", note: "'за ним следуют' (theo sau nó là)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nếu xét theo số lượng dự án mới thì Hàn Quốc đứng thứ nhất, và trong số 60 tỉnh thành, Bạc Liêu tiếp tục dẫn đầu nhờ một dự án lớn 4 tỷ USD.", a: "Лидером по количеству новых проектов является Южная Корея, а среди 60 провинций Бакльеу продолжает занимать первое место благодаря крупному проекту на 4 млрд долларов.", note: "'Лидером... является' + Danh từ cách 1 (ở đây đảo ngữ để nhấn mạnh)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Trong 9 tháng đầu năm, tổng vốn đầu tư của VN ra nước ngoài đạt 432 triệu USD, tăng 0,1%, và các nhà đầu tư đã rót vốn vào 25 quốc gia và vùng lãnh thổ.", a: "За первые 9 месяцев общий объём инвестиций Вьетнама за рубеж составил 432 млн долларов США, увеличившись на 0,1%, и инвесторы вложили средства в 25 стран и территорий.", note: "Sử dụng 'увеличившись на' để diễn đạt 'tăng thêm'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Đức dẫn đầu danh sách thu hút đầu tư từ Việt Nam với 4 dự án mới, chiếm 21,4% tổng vốn đầu tư, còn Lào đứng thứ hai với 20,5%.", a: "Германия лидирует с 4 новыми проектами, на долю которой приходится 21,4% от общего объёма инвестиций, а Лаос занимает второе место с 20,5%.", note: "Ghép câu tương phản bằng liên từ 'а'." }
+      ]
+    },
+    4: {
+      title: "Buổi 4: Hợp tác & Diễn đàn",
+      vocab: [
+        {ru: "Межправительственная комиссия", vn: "Ủy ban liên chính phủ"},
+        {ru: "Торгово-экономические вопросы", vn: "Các vấn đề thương mại và kinh tế"},
+        {ru: "Передовые технологии", vn: "Công nghệ tiên tiến"},
+        {ru: "Городская среда", vn: "Môi trường đô thị"},
+        {ru: "Взаимный доступ на рынки", vn: "Khả năng tiếp cận thị trường của nhau"},
+        {ru: "Космическое пространство", vn: "Không gian vũ trụ"},
+        {ru: "Избежание двойного налогообложения", vn: "Tránh đánh thuế hai lần"},
+        {ru: "Мирный договор", vn: "Hiệp định hòa bình"},
+        {ru: "Деловые круги", vn: "Giới doanh nghiệp"},
+        {ru: "Поступательное развитие", vn: "Sự phát triển không ngừng/từng bước"},
+        {ru: "Многоплановые отношения", vn: "Mối quan hệ đa phương/nhiều mặt"},
+        {ru: "Возобновляемые источники энергии", vn: "Nguồn năng lượng tái tạo"},
+        {ru: "Инновационные технологии", vn: "Công nghệ đổi mới sáng tạo"},
+        {ru: "Перерабатывающая промышленность", vn: "Công nghiệp chế biến, chế tạo"},
+        {ru: "Трансформация модели роста", vn: "Chuyển đổi mô hình tăng trưởng"},
+        {ru: "Конкурентоспособность", vn: "Năng lực cạnh tranh"},
+        {ru: "Научно-техническая база", vn: "Nền tảng khoa học - kỹ thuật"},
+        {ru: "Фундаментальные исследования", vn: "Nghiên cứu nền tảng / cơ bản"},
+        {ru: "Точное машиностроение", vn: "Cơ khí chính xác"},
+        {ru: "Сопредседатель", vn: "Đồng chủ tịch"}
+      ],
+      structs: [
+        {ru: "внести реальный вклад в достижение ...", vn: "thực sự góp phần đưa ... lên (đạt được)"},
+        {ru: "поднять двусторонние отношения на новый уровень", vn: "đưa mối quan hệ song phương lên một tầm cao mới"},
+        {ru: "повышение уровня жизни населения", vn: "nâng cao mức sống của người dân"},
+        {ru: "поднимался вопрос о ...", vn: "đã đề cập đến vấn đề ..."},
+        {ru: "использование в мирных целях", vn: "sử dụng vì mục đích hòa bình"},
+        {ru: "предпринять усилия для скорейшей ратификации", vn: "nỗ lực thúc đẩy việc nhanh chóng phê chuẩn"},
+        {ru: "способствовать взаимным инвестициям и торговле", vn: "thúc đẩy/hỗ trợ đầu tư và thương mại song phương"},
+        {ru: "многократно повысить качество связей", vn: "nâng cao hơn nữa/nhiều lần chất lượng các mối quan hệ"},
+        {ru: "чтобы это привело к заключению ...", vn: "để tiến tới / dẫn đến việc ký kết ..."},
+        {ru: "быть направленным на укрепление связей", vn: "nhằm củng cố các mối quan hệ"},
+        {ru: "подтверждать обоюдную нацеленность на ...", vn: "khẳng định mục tiêu chung hướng tới ..."},
+        {ru: "сопредседательствовать на форуме", vn: "đồng chủ trì diễn đàn"},
+        {ru: "уделять особое внимание чему-либо", vn: "đặc biệt chú trọng / quan tâm đến điều gì"},
+        {ru: "считать что-либо основой для ...", vn: "coi điều gì là nền tảng để ..."},
+        {ru: "наряду с внутренними ресурсами", vn: "bên cạnh các nguồn lực trong nước"},
+        {ru: "составлять большую часть товарооборота", vn: "chiếm phần lớn kim ngạch thương mại"},
+        {ru: "иметь огромный потенциал для сотрудничества", vn: "có tiềm năng to lớn để hợp tác"},
+        {ru: "нуждаться в передовых технологиях", vn: "cần đến các công nghệ tiên tiến"},
+        {ru: "составлять преимущества кого-либо", vn: "là thế mạnh/ưu thế của ai đó"},
+        {ru: "способствовать налаживанию практического взаимодействия", vn: "góp phần thiết lập sự phối hợp thực tiễn"}
+      ],
+      exercises: [
+        // 10 CÂU NGA -> VIỆT (PHỨC HỢP)
+        { dir: "🇷🇺 -> 🇻🇳", q: "Сопредседатели комиссии обсудили реализацию совместных проектов в энергетике и промышленности, отметив, что это способно внести реальный вклад в достижение нового уровня двусторонних отношений.", a: "Các đồng chủ tịch ủy ban đã thảo luận về việc thực hiện các dự án hợp tác trong lĩnh vực năng lượng và công nghiệp, đồng thời nhấn mạnh điều này sẽ thực sự góp phần đưa mối quan hệ song phương lên một tầm cao mới.", note: "Trạng động từ 'отметив' (nhấn mạnh rằng/lưu ý rằng) giúp nối 2 hành động của cùng một chủ ngữ." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "На заседании поднимался вопрос о взаимном доступе продуктов питания на рынки, а также обсуждалось сотрудничество в области исследования космического пространства в мирных целях.", a: "Tại phiên họp, hai bên đã đề cập đến vấn đề tiếp cận thị trường thực phẩm của nhau, cũng như thảo luận về hợp tác trong lĩnh vực nghiên cứu không gian vũ trụ vì mục đích hòa bình.", note: "'поднимался вопрос' (vấn đề được đưa ra/đề cập)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Стороны договорились, что предпримут усилия для скорейшей ратификации соглашения об избежании двойного налогообложения, чтобы способствовать взаимным инвестициям.", a: "Hai bên đã thống nhất sẽ nỗ lực thúc đẩy việc nhanh chóng phê chuẩn thỏa thuận tránh đánh thuế hai lần, nhằm thúc đẩy đầu tư song phương.", note: "Cụm 'предпринять усилия для' (nỗ lực để làm gì) kết hợp danh từ phái sinh 'ратификация'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Нам необходимо полностью раскрыть огромный потенциал и многократно повысить качество двусторонних связей, чтобы это привело к заключению мирного договора.", a: "Chúng ta cần khai thác hết tiềm năng to lớn và nâng cao hơn nữa chất lượng các mối quan hệ song phương, để tiến tới việc ký kết hiệp định hòa bình.", note: "'привести к' + Cách 3 (dẫn đến / tiến tới điều gì)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Мероприятие направлено на укрепление торгово-экономических связей, объединяя представителей бизнеса, заинтересованных в поиске новых направлений взаимодействия.", a: "Sự kiện nhằm mục đích củng cố các mối quan hệ kinh tế - thương mại, quy tụ/kết nối các đại diện doanh nghiệp quan tâm đến việc tìm kiếm các hướng hợp tác mới.", note: "Phân từ 'заинтересованных' bổ nghĩa cho 'представителей'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Россия и Вьетнам подтверждают обоюдную нацеленность на поступательное развитие многоплановых отношений, особо перспективными направлениями которых являются инновационные технологии.", a: "Nga và Việt Nam khẳng định mục tiêu chung là phát triển không ngừng các mối quan hệ đa phương, trong đó công nghệ đổi mới sáng tạo là những hướng đi đặc biệt triển vọng.", note: "'обоюдная нацеленность' (mục tiêu chung/sự hướng tới lẫn nhau)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам уделяет особое внимание глубокой трансформации модели роста, считая это основой для повышения конкурентоспособности и устойчивого развития в предстоящий период.", a: "Việt Nam đặc biệt chú trọng chuyển đổi sâu mô hình tăng trưởng, coi đây là nền tảng để nâng cao năng lực cạnh tranh và phát triển bền vững trong giai đoạn tới.", note: "Trạng động từ 'считая' (đánh giá/coi như là)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Для достижения этих целей, наряду с внутренними ресурсами, Вьетнам считает важным расширять сотрудничество с РФ - страной с мощной научно-технической базой.", a: "Để đạt được các mục tiêu này, bên cạnh các nguồn lực trong nước, Việt Nam coi trọng việc mở rộng hợp tác với Liên bang Nga - quốc gia có nền tảng khoa học kỹ thuật vững mạnh.", note: "'наряду с' (cùng với / bên cạnh)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Большую часть двустороннего товарооборота составляют промышленные товары, доля которых в 2024 году заняла примерно 63%.", a: "Phần lớn kim ngạch thương mại song phương là các sản phẩm công nghiệp, chiếm khoảng 63% tỷ trọng trong năm 2024.", note: "Động từ 'составлять' (cấu thành/tạo nên)." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам нуждается в передовых технологиях и фундаментальных исследованиях, которые составляют преимущества России, такие как точное машиностроение и новые материалы.", a: "Việt Nam cần các công nghệ tiên tiến và nghiên cứu nền tảng vốn là thế mạnh của Nga, chẳng hạn như cơ khí chính xác và vật liệu mới.", note: "'нуждаться в' + Cách 6 (cần đến cái gì)." },
+
+        // 10 CÂU VIỆT -> NGA (PHỨC HỢP)
+        { dir: "🇻🇳 -> 🇷🇺", q: "Tại phiên họp, các đại biểu đã thảo luận về việc thực hiện các dự án hợp tác trong lĩnh vực năng lượng, công nghiệp và giao thông, cũng như hợp tác trong lĩnh vực công nghệ tiên tiến.", a: "На заседании обсуждались вопросы реализации совместных проектов в энергетике, промышленности и транспорте, а также сотрудничество в области передовых технологий.", note: "Dùng thể bị động 'обсуждались вопросы' (các vấn đề đã được thảo luận)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việc thực hiện các dự án này sẽ thực sự góp phần đưa mối quan hệ kinh tế thương mại song phương lên một tầm cao mới, đồng thời nâng cao mức sống của người dân hai nước.", a: "Реализация этих проектов способна внести реальный вклад в достижение нового уровня двусторонних торгово-экономических отношений и повышение уровня жизни населения двух стран.", note: "Sử dụng 'способна' (có khả năng / sẽ)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hai bên nhấn mạnh tầm quan trọng của việc phối hợp giữa cơ quan thú y hai nước, nhằm tăng cường xuất nhập khẩu các sản phẩm chăn nuôi và thâm nhập thị trường của nhau.", a: "Стороны отметили важность взаимодействия ветеринарных служб двух стран с целью расширения взаимных поставок животноводческой продукции и доступа на рынки друг друга.", note: "Cụm 'с целью' (với mục đích / nhằm) + Danh từ (Cách 2)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nga và Nhật Bản đã thống nhất sẽ nỗ lực thúc đẩy việc nhanh chóng phê chuẩn thỏa thuận tránh đánh thuế hai lần, cũng như tiếp tục thực hiện các biên bản ghi nhớ khác.", a: "Россия и Япония договорились, что предпримут усилия для скорейшей ратификации соглашения об избежании двойного налогообложения, а также продолжат работу по другим меморандумам.", note: "'договорились, что' (đã thống nhất/thỏa thuận rằng)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Diễn đàn nhằm củng cố mối quan hệ kinh tế - thương mại giữa hai nước, góp phần thiết lập sự phối hợp thực tiễn giữa cộng đồng doanh nghiệp Moskva và các đối tác Việt Nam.", a: "Форум направлен на укрепление торгово-экономических связей между двумя странами, способствуя налаживанию практического взаимодействия между деловыми кругами Москвы и вьетнамскими партнерами.", note: "Sử dụng trạng động từ 'способствуя' (góp phần)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Đại sứ nhấn mạnh rằng hai nước khẳng định mục tiêu chung là phát triển không ngừng các mối quan hệ đa phương, đặc biệt trong lĩnh vực năng lượng tái tạo và thiết bị y tế.", a: "Посол подчеркнул, что обе страны подтверждают обоюдную нацеленность на поступательное развитие многоплановых отношений, особенно в сфере возобновляемых источников энергии и медицинского оборудования.", note: "Nắm vững các cụm danh từ chuyên ngành y tế và năng lượng." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Diễn đàn do Thứ trưởng Bộ Công Thương Việt Nam và Thứ trưởng Bộ Công Thương Liên bang Nga đồng chủ trì, nhằm thảo luận về phát triển công nghiệp và đổi mới sáng tạo.", a: "На форуме сопредседательствовали заместитель министра промышленности и торговли Вьетнама и заместитель министра промышленности и торговли РФ для обсуждения развития промышленности и инноваций.", note: "Động từ 'сопредседательствовать' (đồng chủ trì)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việt Nam đặc biệt chú trọng chuyển đổi sâu mô hình tăng trưởng, tập trung phát triển các lĩnh vực then chốt như năng lượng và khoa học vật liệu để nâng cao năng lực cạnh tranh.", a: "Вьетнам уделяет особое внимание глубокой трансформации модели роста, сосредотачиваясь на развитии таких ключевых направлений, как энергетика и материаловедение, для повышения конкурентоспособности.", note: "Trạng động từ 'сосредотачиваясь на' (tập trung vào)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Bên cạnh các nguồn lực trong nước, Việt Nam coi trọng mở rộng hợp tác quốc tế, đặc biệt với Nga, quốc gia sở hữu nền tảng khoa học - kỹ thuật vững mạnh.", a: "Наряду с внутренними ресурсами, Вьетнам считает важным расширять международное сотрудничество, особенно с Россией - страной, обладающей мощной научно-технической базой.", note: "Sử dụng phân từ 'обладающей' (sở hữu/có được) bổ nghĩa cho 'страной'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Các chuyên gia khẳng định hai nước có tiềm năng lớn trong hợp tác công nghiệp và năng lượng, trong đó phần lớn kim ngạch thương mại song phương là các sản phẩm công nghiệp.", a: "Эксперты подтверждают, что две страны имеют большой потенциал сотрудничества в промышленности и энергетике, при этом большую часть двустороннего товарооборота составляют промышленные товары.", note: "Nối 2 vế độc lập bằng 'при этом' (trong đó/đồng thời)." }
+      ]
+    },
+    5: {
+      title: "Buổi 5: Năng lượng",
+      vocab: [
+        {ru: "Геостратегическое положение", vn: "Vị trí địa chiến lược"},
+        {ru: "Энергетическая безопасность", vn: "An ninh năng lượng"},
+        {ru: "Механизмы обеспечения безопасности", vn: "Cơ chế đảm bảo an ninh"},
+        {ru: "Традиционные отношения", vn: "Mối quan hệ truyền thống"},
+        {ru: "Распространение опыта", vn: "Chia sẻ/phổ biến kinh nghiệm"},
+        {ru: "Высокие и новые технологии", vn: "Công nghệ cao và công nghệ mới"},
+        {ru: "Устойчивое развитие", vn: "Phát triển bền vững"},
+        {ru: "Стратегический столп", vn: "Trụ cột chiến lược"},
+        {ru: "Всеобъемлющее стратегическое партнерство", vn: "Đối tác chiến lược toàn diện"},
+        {ru: "Разведка и добыча нефти и газа", vn: "Thăm dò và khai thác dầu khí"},
+        {ru: "Совместное предприятие (СП)", vn: "Xí nghiệp liên doanh"},
+        {ru: "Значительный вклад", vn: "Đóng góp đáng kể"},
+        {ru: "Ядерная энергетика в мирных целях", vn: "Năng lượng hạt nhân vì mục đích hòa bình"},
+        {ru: "Механизмы диалога", vn: "Cơ chế đối thoại"},
+        {ru: "Трансфер технологий", vn: "Chuyển giao công nghệ"},
+        {ru: "Углеводородное сырье", vn: "Nguyên liệu hydrocacbon"},
+        {ru: "Внедрение новых технологий", vn: "Áp dụng/triển khai công nghệ mới"},
+        {ru: "Добыча полезных ископаемых", vn: "Khai thác khoáng sản"},
+        {ru: "Благоприятные условия", vn: "Điều kiện thuận lợi"},
+        {ru: "Интересы обеих сторон", vn: "Lợi ích của cả hai phía"}
+      ],
+      structs: [
+        {ru: "готов стать мостом между ... и ...", vn: "sẵn sàng trở thành cầu nối giữa ... và ..."},
+        {ru: "в преддверии официального визита", vn: "trước thềm chuyến thăm chính thức"},
+        {ru: "благодаря своему геостратегическому положению", vn: "nhờ vào vị trí địa chiến lược của mình"},
+        {ru: "активно участвовать в региональном сотрудничестве", vn: "tích cực tham gia vào hợp tác khu vực"},
+        {ru: "создать основу для развития взаимодействия", vn: "xây dựng nền tảng cho sự phát triển hợp tác"},
+        {ru: "оставаться одним из стратегических столпов", vn: "vẫn là một trong những trụ cột chiến lược"},
+        {ru: "вносить значительный вклад в развитие", vn: "đóng góp đáng kể vào sự phát triển"},
+        {ru: "отвечать современным требованиям развития", vn: "đáp ứng yêu cầu phát triển hiện nay"},
+        {ru: "существует высокий уровень доверия", vn: "có mức độ tin cậy cao"},
+        {ru: "укрепляемый регулярными визитами", vn: "được củng cố bởi các chuyến thăm thường xuyên"},
+        {ru: "значительный прогресс достигнут после ...", vn: "tiến bộ đáng kể đạt được sau khi ..."},
+        {ru: "включая совместные исследования", vn: "bao gồm cả các nghiên cứu chung"},
+        {ru: "усиливать сотрудничество в сфере ...", vn: "tăng cường hợp tác trong lĩnh vực ..."},
+        {ru: "принимать/принять кого-либо для обсуждения", vn: "tiếp đón ai đó để thảo luận về ..."},
+        {ru: "поддерживать сотрудничество более 40 лет", vn: "duy trì hợp tác hơn 40 năm"},
+        {ru: "позволить повысить эффективность экономики", vn: "giúp nâng cao hiệu quả kinh tế"},
+        {ru: "уделять внимание и поддерживать", vn: "quan tâm và ủng hộ"},
+        {ru: "на основе соблюдения законов", vn: "trên cơ sở tuân thủ luật pháp"},
+        {ru: "выразить благодарность за поддержку", vn: "bày tỏ sự cảm ơn vì sự hỗ trợ"},
+        {ru: "создавать благоприятные условия cho ...", vn: "tạo điều kiện thuận lợi cho ..."}
+      ],
+      exercises: [
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам готов стать мостом между Россией и странами Азии, активно участвуя в региональном энергетическом сотрудничестве благодаря своему геостратегическому положению.", a: "Việt Nam sẵn sàng trở thành cầu nối giữa Nga và các nước châu Á, đồng thời tích cực tham gia vào hợp tác năng lượng khu vực nhờ vị trí địa chiến lược của mình.", note: "Ghép ý từ mục 1 và 2 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Буй Тхань Шон напомнил, что энергетика остается одним из стратегических столпов партнерства, при этом Россия является крупным партнером Вьетнама в нефтегазовых проектах.", a: "Bùi Thanh Sơn lưu ý rằng năng lượng vẫn là một trong những trụ cột chiến lược của quan hệ đối tác, trong đó Nga là đối tác lớn của Việt Nam trong các dự án dầu khí.", note: "Ghép ý từ mục 5 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Два совместных предприятия вносят значительный вклад в развитие сотрудничества, эффективно работая в сфере разведки и добычи нефти и газа как во Вьетнаме, так и в России.", a: "Hai xí nghiệp liên doanh đóng góp đáng kể vào sự phát triển hợp tác, hoạt động hiệu quả trong lĩnh vực thăm dò và khai thác dầu khí ở cả Việt Nam và Nga.", note: "Sử dụng trạng động từ 'внося' (đóng góp) để nối ý." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В политической сфере существует высокий уровень доверия, укрепляемый регулярными визитами, в то время как в экономике значительный прогресс достигнут после вступления в силу соглашения о свободной торговле.", a: "Trong lĩnh vực chính trị có mức độ tin cậy cao được củng cố bởi các chuyến thăm thường xuyên, trong khi đó kinh tế đạt tiến bộ đáng kể sau khi hiệp định thương mại tự do có hiệu lực.", note: "Ghép mục 8 và 9 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Успешно развивается научно-техническое сотрудничество, включая трансфер технологий на базе Тропического центра, и стороны реализуют проект создания Центра ядерной науки.", a: "Hợp tác khoa học kỹ thuật đang phát triển thành công, bao gồm chuyển giao công nghệ tại Trung tâm Nhiệt đới, và hai bên đang thực hiện dự án xây dựng Trung tâm khoa học hạt nhân.", note: "Ghép ý từ mục 11 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам заинтересован в получении опыта от партнеров в области высоких технологий, чтобы обеспечить энергетическую безопасность và устойчивое развитие страны.", a: "Việt Nam quan tâm đến việc học hỏi kinh nghiệm từ các đối tác trong lĩnh vực công nghệ cao nhằm đảm bảo an ninh năng lượng và phát triển bền vững đất nước.", note: "Dùng 'để' (чтобы) nối ý mục tiêu." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Россия реализует во Вьетнаме 199 проектов, а Вьетнам осуществляет в России 16 проектов, занимая четвертое место среди иностранных инвесторов.", a: "Nga thực hiện 199 dự án tại Việt Nam, còn Việt Nam triển khai 16 dự án tại Nga, đứng thứ tư trong số các nhà đầu tư nước ngoài.", note: "Ghép số liệu từ mục 10 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Премьер-министр Фам Минь Тинь принял руководителей компаний «Зарубежнефть» и «Мицуи» для обсуждения вопросов расширения инвестиций и внедрения новых технологий.", a: "Thủ tướng Phạm Minh Chính đã tiếp lãnh đạo công ty Zarubezhneft và Mitsui để thảo luận về việc mở rộng đầu tư và áp dụng công nghệ mới.", note: "Ghép ý từ mục 1 và 2 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Сотрудничество в нефтегазовой сфере помогает повысить эффективность экономики, обеспечить энергетическую безопасность и подготовить высококвалифицированные кадры.", a: "Hợp tác trong lĩnh vực dầu khí giúp nâng cao hiệu quả kinh tế, đảm bảo an ninh năng lượng và đào tạo nguồn nhân lực trình độ cao.", note: "Ghép ý từ mục 4 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Правительство Вьетнама поддерживает совместные предприятия, создавая благоприятные условия для их работы на основе соблюдения законов и в интересах обеих сторон.", a: "Chính phủ Việt Nam ủng hộ các xí nghiệp liên doanh, tạo điều kiện thuận lợi cho hoạt động của họ trên cơ sở tuân thủ luật pháp và vì lợi ích của cả hai phía.", note: "Ghép ý từ mục 5 của Text 3." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việt Nam sẵn sàng trở thành cầu nối thúc đẩy hợp tác năng lượng, đồng thời tích cực tham gia vào các cơ chế đảm bảo an ninh năng lượng trong khuôn khổ ASEAN.", a: "Вьетнам готов стать мостом для продвижения сотрудничества в сфере энергетики, активно участвуя в механизмах обеспечения энергетической безопасности в рамках АСЕАН.", note: "Dùng trạng động từ 'участвуя' để nối ý." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nhờ vị trí địa chiến lược, Việt Nam có thể chia sẻ kinh nghiệm hợp tác giữa Nga và các quốc gia khác, tạo cơ sở cho tương tác hiệu quả trong tương lai.", a: "Благодаря своему геостратегическому положению Вьетнам может распространять опыт сотрудничества между Россией и другими странами, создавая основу для эффективного взаимодействия в будущем.", note: "Dùng 'создавая' (tạo ra) làm trạng động từ kết quả." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Năng lượng vẫn là trụ cột chiến lược trong quan hệ Đối tác chiến lược toàn diện, trong đó các liên doanh dầu khí đóng góp đáng kể vào sự phát triển của cả hai nước.", a: "Энергетика остается стратегическим столпом Всеобъемлющего стратегического партнерства, при этом совместные предприятия вносят значительный вклад в развитие обеих стран.", note: "Ghép thuật ngữ 'Trụ cột chiến lược' và 'Đóng góp đáng kể'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Mối quan hệ chính trị có mức độ tin cậy cao được củng cố qua các chuyến thăm thường xuyên và các cơ chế đối thoại về quốc phòng và an ninh.", a: "В политической сфере существует высокий уровень доверия, укрепляемый регулярными визитами и механизмами диалога в сфере обороны и безопасности.", note: "Dùng phân từ bị động 'укрепляемый' để bổ nghĩa cho 'доверия'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hợp tác kinh tế có tiến bộ đáng kể sau khi hiệp định thương mại tự do có hiệu lực năm 2016, đưa kim ngạch song phương đạt 4,58 tỷ USD vào năm 2024.", a: "В экономике достигнут значительный прогресс после вступления в силу соглашения о свободной торговле в 2016 году, в результате чего товарооборот достиг 4,58 млрд долларов в 2024 году.", note: "Dùng 'в результате чего' để nối ý kết quả con số." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hai nước triển khai thành công hợp tác khoa học kỹ thuật và chuyển giao công nghệ tại Trung tâm Nhiệt đới, đồng thời thực hiện dự án Trung tâm hạt nhân tại Việt Nam.", a: "Стороны успешно развивают научно-техническое сотрудничество и трансфер технологий в Тропическом центре, реализуя проект создания Центра ядерной науки во Вьетнаме.", note: "Ghép ý về Trung tâm Nhiệt đới và Trung tâm hạt nhân." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Phó Thủ tướng ghi nhận đóng góp của 80 nghìn công dân Việt Nam tại Nga, những người góp phần củng cố mối quan hệ song phương và phát triển kinh tế.", a: "Вице-премьер отметил вклад 80 тысяч вьетнамских граждан в России, которые способствуют укреплению двусторонних отношений и развитию экономики.", note: "Dùng mệnh đề quan hệ 'которые'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Thủ tướng khẳng định hợp tác dầu khí là nội dung quan trọng giúp bảo đảm an ninh năng lượng và đào tạo nguồn nhân lực chất lượng cao.", a: "Премьер-министр подчеркнул, что сотрудничество в нефтегазовой сфере является важным аспектом, помогающим обеспечить энергетическую безопасность и подготовить высококвалифицированные кадры.", note: "Dùng phân từ 'помогающим' thay cho mệnh đề quan hệ." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Chính phủ Việt Nam luôn tạo điều kiện thuận lợi cho doanh nghiệp Nga và ủng hộ việc tham gia vào các dự án năng lượng mới.", a: "Правительство Вьетнама всегда создает благоприятные условия для российских предприятий и поддерживает их участие в новых энергетических проектах.", note: "Ghép các động từ 'tạo điều kiện' và 'ủng hộ'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Lãnh đạo Zarubezhneft bày tỏ lòng biết ơn vì sự hỗ trợ của Việt Nam và mong muốn mở rộng hợp tác sang lĩnh vực khai thác khoáng sản.", a: "Генеральный директор «Зарубежнефть» выразил благодарность за поддержку Вьетнама и желание расширить сотрудничество в области добычи полезных ископаемых.", note: "Cấu trúc 'выразить благодарность за что'." }
+      ]
+    },
+   6: {
+      title: "Buổi 6: Nông nghiệp",
+      vocab: [
+        {ru: "Взаимные поставки агропродукции", vn: "Xuất nhập khẩu nông sản / Giao thương nông sản"},
+        {ru: "Номенклатура товаров", vn: "Danh mục hàng hóa"},
+        {ru: "Молокоперерабатывающее предприятие", vn: "Xí nghiệp/Nhà máy chế biến sữa"},
+        {ru: "Животноводческий комплекс", vn: "Khu phức hợp chăn nuôi"},
+        {ru: "Фитосанитарные требования", vn: "Yêu cầu kiểm dịch thực vật / Vệ sinh thực phẩm"},
+        {ru: "Национальные валюты", vn: "Đồng nội tệ"},
+        {ru: "Кредитно-банковское сотрудничество", vn: "Hợp tác tín dụng - ngân hàng"},
+        {ru: "Транзакции в рублях и донгах", vn: "Giao dịch bằng đồng rúp và đồng đồng"},
+        {ru: "Коммерческие сделки", vn: "Giao dịch thương mại"},
+        {ru: "Широкий спектр финансовых услуг", vn: "Nhiều loại hình dịch vụ tài chính"},
+        {ru: "Инвестиционные cam kết (обязательства)", vn: "Cam kết hợp tác đầu tư"},
+        {ru: "Аграрный рынок", vn: "Thị trường nông nghiệp"},
+        {ru: "Логистические трудности", vn: "Khó khăn về logistics / vận chuyển"},
+        {ru: "Nhu cầu tiêu dùng (Потребление)", vn: "Потребление / Спрос"},
+        {ru: "Quy mô thị trường (Объем рынка)", vn: "Объем / Масштаб рынка"},
+        {ru: "Công suất (Мощность)", vn: "Мощность"},
+        {ru: "Vướng mắc chính sách (Законодательные барьеры)", vn: "Законодательные барьеры / препятствия"},
+        {ru: "Nền tảng vững chắc (Прочная основа)", vn: "Прочная основа / фундамент"},
+        {ru: "Mở ra hướng phát triển mới", vn: "Открывать новые направления развития"},
+        {ru: "Sản xuất trong nước (Отечественное производство)", vn: "Собственное / отечественное производство"}
+      ],
+      structs: [
+        {ru: "углублять сотрудничество в сельском хозяйстве", vn: "thúc đẩy/làm sâu sắc hợp tác trong nông nghiệp"},
+        {ru: "расширять номенклатуру поставок", vn: "mở ra/đa dạng hóa các mặt hàng xuất nhập khẩu"},
+        {ru: "завершить первую очередь строительства", vn: "hoàn thành giai đoạn đầu của dự án xây dựng"},
+        {ru: "являться перспективной страной для ...", vn: "là quốc gia đầy tiềm năng để ..."},
+        {ru: "урегулировать ряд вопросов по ...", vn: "giải quyết một số vấn đề / tháo gỡ vướng mắc về ..."},
+        {ru: "идти с дисконтом к конкурентам", vn: "giảm giá để cạnh tranh với các đối thủ"},
+        {ru: "предоставлять высокое качество и надежность", vn: "đảm bảo sản phẩm chất lượng cao và uy tín"},
+        {ru: "последовательно переходить на национальные валюты", vn: "từng bước chuyển sang sử dụng đồng nội tệ"},
+        {ru: "обеспечить более ... % объема сделок", vn: "chiếm/đảm bảo hơn ... % khối lượng giao dịch"},
+        {ru: "уделять особое внимание роли чего-либо", vn: "đặc biệt chú trọng đến vai trò của ..."},
+        {ru: "сохранять позитивную динамику показателей", vn: "duy trì đà tăng trưởng của các chỉ số"},
+        {ru: "подписать совместное заявление về ...", vn: "ký kết tuyên bố chung về ..."},
+        {ru: "свидетельствовать o большом потенциале", vn: "cho thấy / minh chứng cho tiềm năng lớn"},
+        {ru: "благодаря стабильному росту", vn: "nhờ vào sự tăng trưởng ổn định"},
+        {ru: "в связи с растущим потреблением", vn: "do nhu cầu tiêu dùng tăng cao"},
+        {ru: "составить около ... млрд долларов (или ...)", vn: "đạt khoảng ... tỷ đô la (tương đương ...)"},
+        {ru: "подтвердить готовность снять барьеры", vn: "khẳng định sẵn sàng tháo gỡ rào cản"},
+        {ru: "служить прочной основой для укрепления связей", vn: "là nền tảng vững chắc để củng cố các mối quan hệ"},
+        {ru: "наращивать поставки в дружественные страны", vn: "tăng cường xuất khẩu sang các nước hữu nghị"},
+        {ru: "включая переработку сырья", vn: "bao gồm cả khâu chế biến nguyên liệu"}
+      ],
+      exercises: [
+        { dir: "🇷🇺 -> 🇻🇳", q: "Россия и Вьетнам углубляют сотрудничество в сельском хозяйстве, расширяя номенклатуру поставок, при этом вьетнамский холдинг TH Group уже завершил первую очередь строительства животноводческого комплекса.", a: "Nga và Việt Nam đang thúc đẩy hợp tác trong nông nghiệp, đa dạng hóa các mặt hàng xuất nhập khẩu, đồng thời tập đoàn TH của Việt Nam đã hoàn thành giai đoạn đầu dự án khu phức hợp chăn nuôi.", note: "Ghép ý từ mục 1 và 2 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Россия поставляет во Вьетнам зерно и свинину, однако нам нужно урегулировать ряд вопросов с фитосанитарным требованиям, чтобы наращивать поставки и подвинуть конкурентов.", a: "Nga xuất khẩu sang VN lúa mì và thịt lợn, tuy nhiên chúng ta cần giải quyết một số vấn đề về kiểm dịch thực vật để tăng cường xuất khẩu và đánh bại các đối thủ cạnh tranh.", note: "Ghép ý từ mục 3 và 4 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Для успеха на рынке нужно или идти с дисконтом к конкурентам, или предоставлять высокое качество, при этом Россия и Вьетнам последовательно переходят на национальные валюты.", a: "Để thành công trên thị trường, cần phải giảm giá cạnh tranh hoặc đảm bảo chất lượng cao, đồng thời Nga và VN đang từng bước chuyển sang sử dụng đồng nội tệ.", note: "Ghép ý từ mục 5 và 6 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Доля транзакций в рублях и донгах обеспечила почти 60% объема сделок, а Вьетнамско-российский банк стабильно оказывает клиентам широкий спектр финансовых услуг.", a: "Tỷ lệ giao dịch bằng đồng rúp và đồng đồng đã chiếm gần 60% khối lượng giao dịch, và Ngân hàng liên doanh Việt-Nga đang cung cấp ổn định nhiều loại hình dịch vụ tài chính cho khách hàng.", note: "Ghép ý từ mục 6 và 7 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Объём товарооборота агропродукции значительно вырос, в то время как инвестиционные обязательства открывают новые направления развития аграрных связей между двумя странами.", a: "Kim ngạch xuất nhập khẩu nông sản tăng trưởng rõ rệt, trong khi các cam kết đầu tư đang mở ra những hướng phát triển mới cho quan hệ nông nghiệp giữa hai nước.", note: "Ghép ý từ mục 1 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Российская делегация провела встречу в Минсельхозе с целью продвижения торгово-инвестиционного сотрудничества и обсуждения мер по решению проблем двустороннего взаимодействия.", a: "Đoàn công tác Nga đã có buổi làm việc tại Bộ Nông nghiệp nhằm thúc đẩy hợp tác thương mại - đầu tư và thảo luận các biện pháp giải quyết khó khăn trong tương tác song phương.", note: "Ghép ý từ mục 2 và 3 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Несмотря на логистические трудности, товарооборот в 2024 году достиг 1,34 млрд долларов, увеличившись почти на 40% по сравнению с предыдущим годом.", a: "Bất chấp những khó khăn về logistics, kim ngạch thương mại năm 2024 đạt 1,34 tỷ USD, tăng gần 40% so với năm trước.", note: "Sử dụng 'Несмотря на' (Bất chấp) và trạng động từ 'увеличившись'." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам имеет большой потенциал развития молочной продукции в связи с растущим потреблением, при этом объем молочного рынка достиг 135 трлн донгов, что свидетельствует о его росте.", a: "VN có tiềm năng lớn phát triển các sản phẩm sữa do nhu cầu tiêu dùng tăng cao, đồng thời quy mô thị trường sữa đạt 135 nghìn tỷ đồng, minh chứng cho sự tăng trưởng của ngành.", note: "Ghép ý từ mục 5 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Проект корпорации TH на Дальнем Востоке включает комплекс на 6000 коров и завод мощностью 250 тонн в сутки, что служит прочной основой для укрепления отношений.", a: "Dự án của tập đoàn TH tại Viễn Đông gồm khu phức hợp 6000 con bò và nhà máy công suất 250 tấn/ngày, điều này đóng vai trò là nền tảng vững chắc để củng cố quan hệ.", note: "Ghép ý từ mục 6 và 7 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Губернатор подтвердил готовность снять законодательные барьеры для вьетнамских предприятий, подчеркнув, что экономическое сотрудничество является важным фактором дружбы.", a: "Thống đốc khẳng định sẵn sàng tháo gỡ rào cản chính sách cho doanh nghiệp VN, nhấn mạnh rằng hợp tác kinh tế là nhân tố quan trọng của tình hữu nghị.", note: "Ghép ý từ mục 7 của Text 3." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nga và VN đang thúc đẩy hợp tác nông nghiệp, tăng cường giao thương nông sản và đa dạng hóa các mặt hàng thực phẩm xuất nhập khẩu.", a: "Россия и Вьетнам углубляют сотрудничество в сельском хозяйстве, наращивая взаимные поставки агропродукции и расширяя их номенклатуру.", note: "Sử dụng 'углублять' và 'наращивая'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Tập đoàn TH đang xây dựng nhà máy chế biến sữa tại tỉnh Kaluga, sau khi đã hoàn thành giai đoạn đầu dự án chăn nuôi bò sữa tại ngoại thành Moscow.", a: "Холдинг TH Group строит молокоперерабатывающее предприятие в Калужской области после того, как завершил первую очередь строительства животноводческого комплекса в Подмосковье.", note: "Ghép địa điểm Kaluga và Podmoskovye." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nga coi Việt Nam là thị trường đầy tiềm năng nhưng cần tháo gỡ vướng mắc về yêu cầu kiểm dịch thực vật để cạnh tranh với các đối thủ khác.", a: "Россия считает Вьетнам перспективной страной, но необходимо урегулировать ряд вопросов с фитосанитарным требованиям, чтобы конкурировать с другими соперниками.", note: "Dùng 'перспективной страной' và 'урегулировать'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Để tăng cường xuất khẩu, Nga có thể chọn cách giảm giá bán hoặc đảm bảo sản phẩm chất lượng cao và uy tín trong thanh toán.", a: "Для наращивания экспорта Россия может или идти с дисконтом к конкурентам, или предоставлять высокое качество и надежность расчетов.", note: "Cấu trúc lựa chọn 'или... или...'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hai nước đang từng bước chuyển sang sử dụng nội tệ, giúp tỷ lệ giao dịch bằng đồng rúp và đồng đồng chiếm gần 60% tổng kim ngạch trong quý 1 năm nay.", a: "Две страны последовательно переходят на национальные валюты, благодаря чему доля транзакций в рублях и донгах обеспечила почти 60% объема в первом квартале этого года.", note: "Dùng 'благодаря чему' để nối kết quả." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Ngân hàng Liên doanh Việt-Nga đóng vai trò quan trọng khi cung cấp nhiều loại hình dịch vụ tài chính và duy trì đà tăng trưởng của các chỉ số chính.", a: "Вьетнамско-российский банк играет важную роль, оказывая широкий спектр финансовых услуг и сохраняя позитивную динамику основных показателей.", note: "Dùng trạng động từ 'оказывая' và 'сохраняя'." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Bất chấp suy thoái kinh tế toàn cầu, kim ngạch nông lâm thủy sản vẫn đạt 1,34 tỷ USD, tăng gần 40% so với cùng kỳ năm trước.", a: "Несмотря на глобальный экономический спад, объём товарооборот сельхозпродукции достиг 1,34 млрд долларов, увеличившись почти на 40% по сравнению с предыдущим годом.", note: "Cụm 'сельхозпродукция' viết tắt cho nông lâm thủy sản." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việt Nam có tiềm năng lớn trong ngành sữa do nhu cầu tăng cao, với quy mô thị trường đạt khoảng 6 tỷ USD vào năm 2024.", a: "Вьетнам имеет большой потенциал в молочной отрасли в связи с растущим спросом, при этом объем рынка достиг около 6 млрд долларов в 2024 году.", note: "Dùng 'в связи с' (do/vì)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Dự án của tập đoàn TH tại Viễn Đông có tổng vốn đầu tư 5.200 tỷ đồng, bao gồm nhà máy chế biến công suất 250 tấn sữa mỗi ngày.", a: "Проект корпорации TH на Дальнем Востоке имеет общий объём инвестиций в 5200 млрд донгов, включая перерабатывающий завод мощностью 250 тонн молока в сутки.", note: "Dùng 'включая' (bao gồm)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hợp tác kinh tế là nền tảng vững chắc để củng cố quan hệ hữu nghị, và Nga sẵn sàng tháo gỡ rào cản chính sách cho doanh nghiệp Việt Nam.", a: "Экономическое сотрудничество является прочной основой для укрепления дружбы, и Россия готова снять законодательные барьеры для вьетнамских предприятий.", note: "Dùng 'прочной основой' và 'снять барьеры'." }
+      ]
+    },
+    7: {
+      title: "Buổi 7: Điện hạt nhân",
+      vocab: [
+        {ru: "Атомная электростанция (АЭС)", vn: "Nhà máy điện hạt nhân"},
+        {ru: "Долгосрочные стратегические интересы", vn: "Lợi ích chiến lược dài hạn"},
+        {ru: "Энергетическая безопасность", vn: "An ninh năng lượng"},
+        {ru: "Высокотехнологичные совместные проекты", vn: "Các dự án hợp tác công nghệ cao"},
+        {ru: "Системный подход", vn: "Cách tiếp cận có hệ thống"},
+        {ru: "Углеводороды", vn: "Hydrocarbon (Dầu khí)"},
+        {ru: "Подготовка кадров", vn: "Đào tạo cán bộ / nhân lực"},
+        {ru: "Государственный долг", vn: "Nợ công"},
+        {ru: "Льготный кредит", vn: "Khoản vay / tín dụng ưu đãi"},
+        {ru: "Энергоблок", vn: "Tổ máy (điện)"},
+        {ru: "Выбросы парниковых газов", vn: "Phát thải khí nhà kính"},
+        {ru: "Климатическая конференция", vn: "Hội nghị khí hậu"},
+        {ru: "Ядерная наука и технологии", vn: "Khoa học và công nghệ hạt nhân"},
+        {ru: "Исследовательский реактор", vn: "Lò phản ứng nghiên cứu"},
+        {ru: "Биотехнология", vn: "Công nghệ sinh học"},
+        {ru: "Инновационные материалы", vn: "Vật liệu mới / vật liệu cải tiến"},
+        {ru: "Автоматизация", vn: "Tự động hóa"},
+        {ru: "Безопасная эксплуатация", vn: "Vận hành an toàn"},
+        {ru: "Проектирование", vn: "Thiết kế (giai đoạn thiết kế)"},
+        {ru: "Международное агентство по атомной энергии (МАГАТЭ)", vn: "Cơ quan Năng lượng Nguyên tử Quốc tế (IAEA)"}
+      ],
+      structs: [
+        {ru: "способно изменить отношения в лучшую сторону", vn: "có thể làm thay đổi mối quan hệ theo hướng tích cực hơn"},
+        {ru: "назвать шаг ключевым фактором углубления сотрудничества", vn: "cho rằng bước đi này là yếu tố then chốt thúc đẩy hợp tác"},
+        {ru: "в контексте стратегических интересов", vn: "vì lợi ích chiến lược / trong bối cảnh lợi ích chiến lược"},
+        {ru: "относиться к сфере высоких технологий", vn: "thuộc lĩnh vực / là một trong những ngành công nghệ cao"},
+        {ru: "требовать системного подхода", vn: "đòi hỏi cách tiếp cận có hệ thống"},
+        {ru: "на долгосрочной основе", vn: "trên cơ sở dài hạn"},
+        {ru: "приостановить реализацию плана", vn: "tạm dừng thực hiện kế hoạch"},
+        {ru: "из-за высоких расходов и уровня госдолга", vn: "do chi phí cao và mức nợ công"},
+        {ru: "достигать около ... % ВВП", vn: "đạt khoảng ... % GDP"},
+        {ru: "неоднократно призывать власти к чему-либо", vn: "nhiều lần kêu gọi chính quyền làm gì"},
+        {ru: "вернуться к обсуждению вопроса", vn: "tiếp tục thảo luận / quay lại xem xét vấn đề"},
+        {ru: "сокращение выбросов до нуля к ... году", vn: "giảm phát thải xuống mức bằng không vào năm ..."},
+        {ru: "продолжать укрепляться и активизироваться", vn: "tiếp tục được duy trì và phát triển tích cực"},
+        {ru: "поддерживать в реализации плана создания", vn: "hỗ trợ triển khai kế hoạch thành lập/xây dựng"},
+        {ru: "установить традиционные отношения с советских времён", vn: "thiết lập quan hệ truyền thống từ thời Xô Viết"},
+        {ru: "уделять особое внимание сотрудничеству в ...", vn: "đặc biệt coi trọng hợp tác trong ..."},
+        {ru: "вносить важный вклад в развитие", vn: "đóng góp quan trọng cho sự phát triển"},
+        {ru: "разрабатывать план по подготовке ресурсов", vn: "xây dựng kế hoạch đào tạo nguồn nhân lực"},
+        {ru: "обратиться к кому-либо с просьбой создать условия", vn: "đề nghị ai đó tạo điều kiện"},
+        {ru: "в соответствии с нормами МАГАТЭ", vn: "phù hợp/đảm bảo các tiêu chuẩn của IAEA"}
+      ],
+      exercises: [
+        { dir: "🇷🇺 -> 🇻🇳", q: "Положительное решение о строительстве АЭС способно изменить отношения двух стран в лучшую сторону, став ключевым фактором углубления сотрудничества в контексте энергетической безопасности.", a: "Quyết định tái khởi động xây dựng nhà máy điện hạt nhân có thể làm thay đổi mối quan hệ hai nước theo hướng tích cực hơn, trở thành yếu tố then chốt thúc đẩy hợp tác vì an ninh năng lượng.", note: "Ghép ý từ mục 1 và 2 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Атомная энергетика относится к сфере высоких технологий и требует системного подхода, включая подготовку научных кадров в рамках комплексных проектов.", a: "Năng lượng hạt nhân là ngành công nghệ cao và đòi hỏi cách tiếp cận có hệ thống, bao gồm cả việc đào tạo cán bộ khoa học trong khuôn khổ các dự án phức hợp.", note: "Ghép ý từ mục 3 và 4 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В 2016 году Вьетнам приостановил реализацию плана развития АЭС из-за высоких расходов и уровня государственного долга, достигавшего около 65% ВВП.", a: "Năm 2016 Việt Nam đã tạm dừng thực hiện kế hoạch phát triển nhà máy điện hạt nhân do chi phí cao và mức nợ công khi đó đạt khoảng 65% GDP.", note: "Ghép số liệu từ mục 5 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Энергетическая ассоциация призывала власти вернуться к обсуждению вопроса, чтобы выполнить обязательства по сокращению выбросов парниковых газов до нуля к 2050 году.", a: "Hiệp hội Năng lượng đã kêu gọi chính quyền quay lại thảo luận vấn đề này nhằm thực hiện cam kết giảm phát thải khí nhà kính xuống mức bằng không vào năm 2050.", note: "Ghép ý từ mục 7 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Сотрудничество в сфере атомной энергетики продолжает укрепляться, и Россия поддерживает Вьетнам в создании Центра ядерной науки с новым исследовательским реактором.", a: "Hợp tác trong lĩnh vực năng lượng nguyên tử tiếp tục được củng cố, và Nga đang hỗ trợ Việt Nam xây dựng Trung tâm khoa học hạt nhân với lò phản ứng nghiên cứu mới.", note: "Ghép ý từ mục 1 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Вьетнам и Россия установили традиционные отношения с советских времён, и сегодня страна уделяет особое внимание сотрудничеству в области высоких технологий.", a: "Việt Nam và Nga đã thiết lập quan hệ truyền thống từ thời Xô Viết, và hiện nay đất nước đặc biệt coi trọng hợp tác trong lĩnh vực công nghệ cao.", note: "Ghép ý từ mục 2 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Совместные научно-технические проекты вносят важный вклад в социально-экономическое развитие, поэтому Миннауки разрабатывает план по подготовке человеческих ресурсов.", a: "Các dự án khoa học kỹ thuật chung đóng góp quan trọng cho sự phát triển kinh tế xã hội, do đó Bộ Khoa học đang xây dựng kế hoạch đào tạo nguồn nhân lực.", note: "Ghép ý từ mục 3 và 4 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Миннауки обратилось к «Росатому» с просьбой создать условия для участия вьетнамских специалистов в проектировании и анализе безопасности реактора.", a: "Bộ Khoa học đã đề nghị Rosatom tạo điều kiện cho các chuyên gia Việt Nam tham gia vào khâu thiết kế và phân tích an toàn cho lò phản ứng.", note: "Ghép ý từ mục 5 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Две страны уделят внимание реализации проекта в соответствии с нормами МАГАТЭ, чтобы обеспечить безопасную и эффективную эксплуатацию центра.", a: "Hai nước sẽ chú trọng triển khai dự án phù hợp với các tiêu chuẩn của IAEA nhằm đảm bảo việc vận hành Trung tâm một cách an toàn và hiệu quả.", note: "Ghép ý từ mục 4 và 6 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Проект «Ниньтхуан-1» предполагал льготный кредит РФ и строительство двух энергоблоков мощностью до 1,2 ГВт каждый, что требовало долгосрочных обязательств.", a: "Dự án Ninh Thuận 1 dự kiến nhận khoản vay ưu đãi từ Nga và xây dựng hai tổ máy công suất 1,2 GW mỗi tổ, điều này đòi hỏi những cam kết dài hạn.", note: "Ghép thông tin kỹ thuật từ mục 5 của Text 1." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Quyết định tái khởi động dự án xây dựng nhà máy điện hạt nhân có thể thúc đẩy quan hệ song phương vì lợi ích chiến lược dài hạn và an ninh năng lượng.", a: "Положительное решение вопроса о строительстве АЭС способно изменить отношения в лучшую сторону в контексте долгосрочных стратегических интересов и энергетической безопасности.", note: "Sử dụng 'способно изменить' (có khả năng làm thay đổi)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Năng lượng hạt nhân thuộc lĩnh vực công nghệ cao, đòi hỏi cách tiếp cận có hệ thống và sự phối hợp giữa các cơ quan liên chính phủ trên cơ sở dài hạn.", a: "Атомная энергетика относится к сфере высоких технологий и требует системного подхода и взаимодействия между ведомствами на долгосрочной основе.", note: "Dùng 'требует системного подхода' (đòi hỏi cách tiếp cận có hệ thống)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Quốc hội Việt Nam đã tạm dừng kế hoạch phát triển điện hạt nhân do chi phí dự án cao và mức nợ công đạt ngưỡng 65% GDP vào thời điểm đó.", a: "Национальное собрание Вьетнама приостановило реализацию плана развития атомной энергетики из-за высоких расходов проекта и уровня госдолга, достигавшего 65% ВВП.", note: "Chú ý phân từ 'достигавшего' (đã đạt mức)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nhiều chuyên gia cho rằng năng lượng hạt nhân đóng vai trò quan trọng trong việc cân đối năng lượng và thực hiện cam kết giảm phát thải khí nhà kính.", a: "Эксперты считают атомную энергетику важной при планировании энергобаланса и выполнении обязательств по сокращению выбросов парниковых газов.", note: "Dùng danh từ 'энергобаланс' (cân đối năng lượng)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Nga đang hỗ trợ Việt Nam triển khai dự án xây dựng Trung tâm khoa học hạt nhân với lò phản ứng nghiên cứu mới công suất 10 MW.", a: "Россия поддерживает Вьетнам в реализации плана создания Центра ядерной науки и технологий с новым исследовательским реактором мощностью 10 МВт.", note: "Dùng 'реализации плана создания' (triển khai kế hoạch thành lập)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việt Nam đặc biệt coi trọng hợp tác với Nga trong nhiều lĩnh vực như công nghệ sinh học, tự động hóa và vật liệu mới.", a: "Вьетнам уделяет особое внимание сотрудничеству с Россией в таких сферах, как биотехнология, автоматизация и инновационные материалы.", note: "Liệt kê các ngành khoa học từ mục 3 của Text 3." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Bộ Khoa học đang xây dựng kế hoạch đào tạo nhân lực nhằm đảm bảo vận hành an toàn và hiệu quả Trung tâm sau khi hoàn thành xây dựng.", a: "Миннауки разрабатывает план по подготовке кадров для обеспечения безопасной и эффективной эксплуатации центра после завершения его строительства.", note: "Cụm 'подготовка кадров' (đào tạo cán bộ)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việt Nam lần đầu tiên triển khai xây dựng lò phản ứng công suất lớn, vì vậy đã đề nghị Rosatom tạo điều kiện cho các chuyên gia tham gia thiết kế.", a: "Вьетнам впервые реализует строительство реактора большой мощности, поэтому обратился к «Росатому» с просьбой создать условия для участия специалистов в проектировании.", note: "Dùng 'впервые реализует' (lần đầu tiên triển khai)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Hai nước sẽ tập trung thúc đẩy dự án và đảm bảo các tiêu chuẩn của IAEA nhằm hướng tới phát triển bền vững mỗi quốc gia.", a: "Две страны уделят внимание продвижению проекта и обеспечению норм МАГАТЭ в целях устойчивого развития каждой страны.", note: "Kết hợp 'нормы МАГАТЭ' và 'устойчивое развитие'[cite: 16, 13]." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Các dự án công nghệ cao như Trung tâm Nhiệt đới và liên doanh dầu khí đóng góp tích cực vào sự phát triển kinh tế - xã hội của Việt Nam.", a: "Высокотехнологичные проекты, такие как Тропический центр и нефтегазовые СП, вносят активный вклад в социально-экономическое развитие Вьетнама.", note: "Kết hợp các danh từ 'Тропический центр' và 'нефтегазовые СП'." }
+      ]
+    },
+    8: {
+      title: "Buổi 8: TH True Milk",
+      vocab: [
+        {ru: "Молочное животноводство", vn: "Chăn nuôi bò sữa"},
+        {ru: "Завод по переработке молока", vn: "Nhà máy chế biến sữa"},
+        {ru: "Инвестиционное соглашение о намерениях", vn: "Thỏa thuận đầu tư / Thỏa thuận ghi nhớ"},
+        {ru: "Тепличное производство", vn: "Sản xuất trong nhà kính"},
+        {ru: "Экологически чистые овощи и фрукты", vn: "Rau quả hữu cơ / sạch"},
+        {ru: "Ввод в эксплуатацию", vn: "Đi vào vận hành / đưa vào hoạt động"},
+        {ru: "Сырьё (переработка сырья)", vn: "Nguyên liệu (chế biến nguyên liệu)"},
+        {ru: "Сертификация", vn: "Sự cấp chứng nhận / chứng chỉ"},
+        {ru: "Интегрированное молочное производство", vn: "Sản xuất sữa tích hợp (giải pháp thông minh)"},
+        {ru: "Производственные мощности", vn: "Năng suất / Công suất sản xuất"},
+        {ru: "Типовая ферма", vn: "Trang trại tiêu chuẩn / điển hình"},
+        {ru: "Завод по производству кормов", vn: "Nhà máy sản xuất thức ăn chăn nuôi"},
+        {ru: "Представительство", vn: "Văn phòng đại diện"},
+        {ru: "Великая Отечественная война", vn: "Chiến tranh Vệ quốc vĩ đại"},
+        {ru: "Научно-исследовательские задачи", vn: "Nhiệm vụ nghiên cứu khoa học"},
+        {ru: "Многосекторная организация", vn: "Tổ chức đa ngành"},
+        {ru: "Национальная оборона и безопасность", vn: "Quốc phòng và an ninh quốc gia"},
+        {ru: "Традиционные отношения дружбы", vn: "Mối quan hệ hữu nghị truyền thống"},
+        {ru: "Всеобъемлющее стратегическое партнерство", vn: "Đối tác chiến lược toàn diện"},
+        {ru: "Выступить с докладом", vn: "Báo cáo / Thuyết trình"}
+      ],
+      structs: [
+        {ru: "стать крупнейшим инвестором в ...", vn: "trở thành nhà đầu tư lớn nhất trong lĩnh vực..."},
+        {ru: "реализовать все заявленные проекты", vn: "thực hiện tất cả các dự án đã công bố/đăng ký"},
+        {ru: "предусматривать реализацию проекта по созданию", vn: "đề cập tới việc/dự kiến thực hiện dự án xây dựng"},
+        {ru: "запланирован на ... год", vn: "được dự kiến/lên kế hoạch vào năm..."},
+        {ru: "в рамках первой/второй очереди", vn: "trong khuôn khổ giai đoạn một/hai"},
+        {ru: "намерена обеспечить и переработку сырья", vn: "dự định đảm bảo thêm cả khâu chế biến nguyên liệu"},
+        {ru: "получить сертификацию как ...", vn: "nhận được chứng nhận là..."},
+        {ru: "составлять четверть национального рынка", vn: "chiếm một phần tư thị trường trong nước"},
+        {ru: "довести свои мощности до ...", vn: "nâng cao năng suất/công suất lên mức..."},
+        {ru: "в преддверии реализации проекта", vn: "ngay trước khi/chuẩn bị triển khai dự án"},
+        {ru: "провести рабочую встречу с кем-либо", vn: "có buổi làm việc với ai đó"},
+        {ru: "поздравить с годовщиной Победы", vn: "chúc mừng nhân dịp kỷ niệm ngày Chiến thắng"},
+        {ru: "выступить с докладом о результатах выполнения", vn: "báo cáo kết quả thực hiện (nhiệm vụ)"},
+        {ru: "превратиться в многосекторную организацию", vn: "phát triển thành / biến thành tổ chức đa ngành"},
+        {ru: "под руководством правительств двух стран", vn: "dưới sự chỉ đạo của chính phủ hai nước"},
+        {ru: "высоко оценить достижения", vn: "đánh giá cao những thành tích/thành tựu"},
+        {ru: "вносить активный вклад в развитие", vn: "đóng góp tích cực vào sự phát triển"},
+        {ru: "способствовать укреплению отношений", vn: "góp phần củng cố mối quan hệ"},
+        {ru: "уделять особое внимание сотрудничеству", vn: "đặc biệt coi trọng/chú trọng hợp tác"},
+        {ru: "согласно докладу / по собственным данным", vn: "theo báo cáo / theo số liệu tự công bố"}
+      ],
+      exercises: [
+        { dir: "🇷🇺 -> 🇻🇳", q: "Если ТН True Milk реализует все заявленные проекты, то группа станет крупнейшим инвестором, построив фермы и завод по переработке молока.", a: "Nếu TH True Milk thực hiện tất cả các dự án đã công bố, tập đoàn sẽ trở thành nhà đầu tư lớn nhất thông qua việc xây dựng các trang trại và nhà máy chế biến sữa.", note: "Ghép ý từ mục 1 của Text 1. Dùng trạng động từ 'построив' để chỉ cách thức." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Инвестиционное соглашение предусматривает создание комплекса молочного животноводства и тепличного производства, ввод которых в эксплуатацию запланирован trên năm 2019.", a: "Thỏa thuận đầu tư đề cập tới việc xây dựng cụm trang trại chăn nuôi bò sữa và sản xuất trong nhà kính, dự kiến đi vào vận hành vào năm 2019.", note: "Ghép ý từ mục 2 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "В первую очередь проекта будет вложено около $220 млн, при этом TH True Milk намерена в дальнейшем обеспечить и переработку сырья.", a: "Giai đoạn đầu của dự án sẽ được đầu tư khoảng 220 triệu USD, đồng thời TH True Milk dự định trong tương lai sẽ đảm bảo thêm cả khâu chế biến nguyên liệu.", note: "Ghép ý từ mục 3 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Компания первой получила сертификацию как высокотехнологичное производство, производя ежегодно около 200 000 т молока, что составляет четверть рынка.", a: "Công ty là đơn vị đầu tiên nhận được chứng nhận là nhà sản xuất công nghệ cao, sản xuất khoảng 200.000 tấn sữa mỗi năm, chiếm một phần tư thị trường.", note: "Ghép ý từ mục 4 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Реализация второй очереди предусматривает строительство четырех ферм, при этом объем инвестиций составит $200 млн, а площадь земли увеличится trên 13,9 тыс. га.", a: "Việc triển khai giai đoạn hai dự kiến xây dựng thêm 4 trang trại, đồng thời vốn đầu tư đạt 200 triệu USD và diện tích đất tăng thêm 13,9 nghìn ha.", note: "Ghép ý từ mục 5 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Лидером по объемам производства стал Агрокомплекс Ткачева, в то время как ЭкоНива заняла второе место, произведя 180 000 т молока по собственным данным.", a: "Tổ hợp nông nghiệp Tkachev dẫn đầu về sản lượng, trong khi EkoNiva đứng thứ hai với sản lượng 180.000 tấn sữa theo số liệu tự công bố.", note: "Ghép ý từ mục 6 của Text 1." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Министр обороны провёл рабочую встречу с Тропическим центром и поздравил специалистов с 75-летней годовщиной Победы в Великой Отечественной войне.", a: "Bộ trưởng Quốc phòng đã có buổi làm việc với Trung tâm Nhiệt đới và chúc mừng các chuyên gia nhân kỷ niệm 75 năm Chiến thắng Chiến tranh Vệ quốc vĩ đại.", note: "Ghép ý từ mục 1 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Генеральный директор выступил с докладом о результатах выполнения задач, подчеркнув, что Центр превратился в многосекторную научно-техническую организацию.", a: "Tổng giám đốc đã báo cáo kết quả thực hiện nhiệm vụ, nhấn mạnh rằng Trung tâm đã phát triển thành một tổ chức khoa học kỹ thuật đa ngành.", note: "Ghép ý từ mục 2 và 3 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Центр вносит активный вклад в социально-экономическое развитие и национальную оборону, способствуя укреплению всестороннего стратегического партнерства.", a: "Trung tâm đóng góp tích cực vào sự phát triển kinh tế xã hội và quốc phòng, góp phần củng cố mối quan hệ đối tác chiến lược toàn diện.", note: "Ghép ý từ mục 4 của Text 3." },
+        { dir: "🇷🇺 -> 🇻🇳", q: "Под руководством правительств двух стран Центр успешно выполняет научно-исследовательские задачи, за что был высоко оценен министром обороны.", a: "Dưới sự chỉ đạo của chính phủ hai nước, Trung tâm đã thực hiện thành công các nhiệm vụ nghiên cứu khoa học và được Bộ trưởng Quốc phòng đánh giá cao.", note: "Ghép ý từ mục 3 và 4 của Text 3." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "TH True Milk đã ký thỏa thuận đầu tư để xây dựng trang trại bò sữa và nhà máy chế biến sữa công nghệ cao, dự kiến đi vào vận hành vào năm 2019.", a: "TH True Milk подписала инвестиционное соглашение о строительстве молочных ферм и высокотехнологичного молокозавода, ввод которых в эксплуатацию запланирован на 2019 год.", note: "Dùng 'ввод в эксплуатацию' (đi vào vận hành)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Trong giai đoạn đầu, dự án sẽ được đầu tư 220 triệu USD, và tập đoàn đặt mục tiêu nâng năng suất lên 500 triệu lít sữa mỗi năm.", a: "В рамках первой очереди в проект будет вложено $220 млн, и группа планирует довести свои мощности до 500 млн литров молока в год.", note: "Dùng 'вложено' (được đầu tư) và 'довести мощности до' (nâng năng suất lên)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Công ty là nhà sản xuất sữa lớn nhất Việt Nam, sản xuất 200.000 tấn sữa mỗi năm và chiếm một phần tư thị trường trong nước.", a: "Компания является крупнейшим производителем молока во Вьетнаме, ежегодно производя 200 000 тонн молока и занимая четверть национального рынка.", note: "Dùng trạng động từ 'производя' và 'занимая' để liệt kê đặc điểm." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Dự án tại tỉnh Moscow bao gồm xây dựng 5 trang trại tiêu chuẩn cùng với nhà máy chế biến sữa và nhà máy sản xuất thức ăn chăn nuôi.", a: "Проект в Московской области предусматривает строительство пяти типовых ферм, а также молокозавода и завода по производству кормов.", note: "Dùng 'предусматривает' (bao gồm/dự kiến)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Một nhà đầu tư Việt Nam đã đăng ký văn phòng đại diện tại Nga để chuẩn bị cho việc triển khai dự án trang trại bò sữa tại vùng Moscow.", a: "Вьетнамский инвестор зарегистрировал представительство в России в преддверии реализации проекта по строительству молочных ферм в Московской области.", note: "Cụm 'в преддверии реализации' (ngay trước khi/chuẩn bị triển khai)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Bộ trưởng Quốc phòng đã thăm Trung tâm Nhiệt đới Việt-Nga và nghe báo cáo về kết quả thực hiện các nhiệm vụ khoa học công nghệ thời gian qua.", a: "Министр обороны посетил Вьетнамо-Российский тропический центр и заслушал доклад о результатах выполнения научно-технологических задач за последнее время.", note: "Dùng 'заслушал доклад' (nghe báo cáo)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Dưới sự chỉ đạo của chính phủ, Trung tâm đã phát triển thành tổ chức đa ngành, đóng góp tích cực vào an ninh quốc phòng của cả hai nước.", a: "Под руководством правительств Центр превратился в многосекторную организацию, внося активный вклад в обеспечение национальной обороны двух стран.", note: "Dùng 'превратился в' (phát triển/biến thành)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Đại tướng Ngô Xuân Lịch đánh giá cao những thành tích của Trung tâm, góp phần củng cố mối quan hệ hữu nghị truyền thống lâu đời và tốt đẹp.", a: "Генерал армии Нго Суан Лить высоко оценил достижения Центра, способствуя укреплению многолетних и добрых традиционных отношений дружбы.", note: "Dùng 'высоко оценил' (đánh giá cao)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Kết quả nghiên cứu của Trung tâm đóng góp tích cực vào phát triển kinh tế-xã hội, đồng thời góp phần xây dựng quan hệ hợp tác chiến lược toàn diện.", a: "Результаты исследований Центра вносят активный вклад в социально-экономическое развитие, способствуя построению всестороннего стратегического партнерства.", note: "Dùng 'вносят активный вклад' (đóng góp tích cực)." },
+        { dir: "🇻🇳 -> 🇷🇺", q: "Việt Nam đặc biệt coi trọng hợp tác với Nga, đồng thời Bộ trưởng đã chúc mừng các chuyên gia nhân kỷ niệm Chiến thắng Chiến tranh Vệ quốc.", a: "Вьетнам уделяет особое внимание сотрудничеству с Россией, при этом Министр поздравил специалистов с годовщиной Победы в Великой Отечественной войне.", note: "Ghép ý ngoại giao và chúc mừng." }
+     ]
+    }
+  };
+  // ==========================================
+
+  let currentSession = 'orgs'; // Mặc định mở tab Tổ chức trước
+
+  function renderTabs() {
+    const tabsDiv = document.getElementById('tabs');
+    tabsDiv.innerHTML = '';
+    Object.keys(courseData).forEach(key => {
+      const btn = document.createElement('button');
+      btn.className = `tab-btn ${key == currentSession ? 'active' : ''}`;
+      btn.innerText = courseData[key].title;
+      btn.onclick = () => { currentSession = key; renderContent(); renderTabs(); };
+      tabsDiv.appendChild(btn);
+    });
+  }
+
+  function renderContent() {
+    const data = courseData[currentSession];
+    let html = '';
+
+    if (currentSession === 'orgs') {
+      html += `
+        <div class="section-title">🏛️ Tổ chức & Cơ quan Quan trọng <span class="counter">${data.items.length} tổ chức</span></div>
+        <div class="grid-2">
+          ${data.items.map(o => `<div class="card card-org">🇷🇺 ${o.ru}<br><br>🇻🇳 <b>${o.vn}</b></div>`).join('')}
+        </div>
+      `;
+    } else {
+      html += `
+        <div class="section-title">📚 Từ vựng cốt lõi <span class="counter">${data.vocab.length} từ</span></div>
+        <div class="grid-2">${data.vocab.map(v => `<div class="card card-vocab">🇷🇺 ${v.ru}<br>🇻🇳 <b>${v.vn}</b></div>`).join('')}</div>
+
+        <div class="section-title">🧩 Cấu trúc cần nhớ <span class="counter">${data.structs.length} cấu trúc</span></div>
+        <div class="grid-2">${data.structs.map(s => `<div class="card card-struct">🔸 ${s.ru}<br>🔹 <b>${s.vn}</b></div>`).join('')}</div>
+
+        <div class="section-title">✍️ Luyện dịch câu phức tạp <span class="counter">${data.exercises.length} câu</span></div>
+        <p style="color: #7f8c8d; font-style: italic; margin-top: 10px;">* Các câu dưới đây đã được thiết kế dài hơn, yêu cầu sử dụng từ nối để ghép các ý.</p>
+      `;
+
+      data.exercises.forEach((ex, index) => {
+        html += `
+          <div class="card" style="margin-top:20px;">
+            <strong>[${ex.dir}] Câu ${index + 1}:</strong> ${ex.q}
+            <textarea placeholder="Gõ bản dịch của bạn... (Chú ý các cấu trúc nối câu)"></textarea>
+            <button class="btn-check" onclick="document.getElementById('fb-${index}').style.display='block'">Kiểm tra & Xem giải thích</button>
+            <div id="fb-${index}" class="feedback">
+              <b>Đáp án tham khảo:</b> ${ex.a}<br>
+              <div class="note">💡 <b>Phân tích:</b> ${ex.note}</div>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    document.getElementById('content').innerHTML = html;
+  }
+
+  renderTabs();
+  renderContent();
+</script>
+</body>
+</html>
