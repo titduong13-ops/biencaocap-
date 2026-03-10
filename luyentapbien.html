@@ -227,6 +227,78 @@ button{cursor:pointer;font-family:inherit;transition:all .2s;}
   #session-tabs{gap:3px;}
   .sess-btn{padding:5px 8px;font-size:10px;}
 }
+
+/* ══ TERMS MODULE ══ */
+#pane-terms{padding:4px 0}
+.terms-hero{background:linear-gradient(135deg,#1e3a5f,#4338ca);color:white;border-radius:18px;padding:22px 24px;margin-bottom:22px}
+.terms-hero-title{font-size:21px;font-weight:900;margin-bottom:6px}
+.terms-hero-sub{font-size:13px;opacity:.85;line-height:1.6;margin-bottom:14px}
+.tmode-bar{display:flex;gap:8px;flex-wrap:wrap}
+.tmode-btn{padding:8px 16px;border-radius:20px;border:2px solid rgba(255,255,255,.3);background:rgba(255,255,255,.15);color:white;font-size:12px;font-weight:700;cursor:pointer;transition:all .2s}
+.tmode-btn.active{background:white;color:#1e3a5f;border-color:white}
+.tmode-btn:hover:not(.active){background:rgba(255,255,255,.28)}
+.tcat-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px}
+.tcat-btn{padding:6px 14px;border-radius:20px;border:2px solid #e2e8f0;background:white;font-size:12px;font-weight:700;color:#64748b;cursor:pointer;transition:all .2s}
+.tcat-btn.active{color:white!important;border-color:transparent}
+.tdir-bar{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:16px;align-items:center}
+.tdir-label{font-size:11px;font-weight:800;color:#94a3b8}
+
+/* flashcard grid */
+.terms-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:10px}
+.tcard{border:2px solid #e2e8f0;border-radius:14px;padding:14px 16px;cursor:pointer;min-height:82px;display:flex;flex-direction:column;justify-content:center;position:relative;background:white;transition:all .2s;overflow:hidden}
+.tcard::before{content:'';position:absolute;left:0;top:0;bottom:0;width:4px;border-radius:4px 0 0 4px}
+.tcard:hover{transform:translateY(-2px);box-shadow:0 5px 16px rgba(0,0,0,.09)}
+.tcard.revealed{background:#fafbff}
+.tcard-idx{position:absolute;top:8px;right:10px;font-size:10px;font-weight:700;color:#cbd5e1}
+.tcard-tag{font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;margin-bottom:5px}
+.tcard-q{font-size:14px;font-weight:700;color:#1e293b;line-height:1.4}
+.tcard-hint{font-size:11px;color:#94a3b8;margin-top:4px}
+.tcard-a{font-size:13px;font-weight:600;margin-top:10px;padding-top:10px;border-top:1px dashed #e2e8f0;display:none;line-height:1.5}
+.tcard-note{font-size:11px;color:#94a3b8;margin-top:5px;font-weight:500;font-style:italic}
+.tcard.revealed .tcard-a{display:block}
+.tcard.revealed .tcard-hint{display:none}
+
+/* quiz */
+.tq-wrap{max-width:620px;margin:0 auto}
+.tq-progbar{background:#e2e8f0;border-radius:8px;height:8px;margin-bottom:12px}
+.tq-progfill{height:8px;border-radius:8px;background:linear-gradient(90deg,#667eea,#764ba2);transition:width .4s}
+.tq-stats{display:flex;gap:10px;margin-bottom:16px;font-size:12px;font-weight:700}
+.tq-stat{background:white;border:1px solid #e2e8f0;border-radius:10px;padding:5px 14px}
+.tq-card{background:white;border:3px solid #e2e8f0;border-radius:20px;padding:28px 24px;text-align:center;min-height:148px;display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative;box-shadow:0 4px 18px rgba(0,0,0,.07);margin-bottom:18px;transition:border-color .3s,box-shadow .3s}
+.tq-card.ok{border-color:#22c55e;box-shadow:0 4px 18px rgba(34,197,94,.2)}
+.tq-card.bad{border-color:#ef4444;box-shadow:0 4px 18px rgba(239,68,68,.2)}
+.tq-badge{position:absolute;top:12px;left:16px;font-size:10px;font-weight:800;letter-spacing:1px;opacity:.6}
+.tq-counter{position:absolute;top:12px;right:14px;font-size:11px;color:#cbd5e1;font-weight:700}
+.tq-q{font-size:17px;font-weight:800;color:#1e293b;line-height:1.5}
+.tq-note{font-size:11px;color:#94a3b8;margin-top:10px;display:none}
+.tq-card.show-note .tq-note{display:block}
+.tq-choices{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:16px}
+.tq-choice{padding:12px 14px;border-radius:12px;border:2px solid #e2e8f0;background:white;font-size:13px;font-weight:600;color:#334155;cursor:pointer;text-align:left;line-height:1.4;transition:all .2s}
+.tq-choice:hover:not([disabled]){border-color:#667eea;background:#f5f3ff}
+.tq-choice[disabled]{cursor:default}
+.tq-choice.hit{border-color:#22c55e!important;background:#dcfce7!important;color:#166534!important}
+.tq-choice.miss{border-color:#ef4444!important;background:#fee2e2!important;color:#991b1b!important}
+.tq-finish{display:none;text-align:center;padding:28px;background:white;border:2px solid #22c55e;border-radius:16px;margin-top:14px}
+
+/* match */
+.tm-wrap{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.tm-col-label{font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;color:#94a3b8;margin-bottom:8px;text-align:center}
+.tm-item{padding:10px 14px;border:2px solid #e2e8f0;border-radius:10px;background:white;font-size:13px;font-weight:600;cursor:pointer;margin-bottom:7px;transition:all .2s;line-height:1.4;min-height:46px;display:flex;align-items:center}
+.tm-item:hover{border-color:#667eea;background:#f5f3ff}
+.tm-item.sel{border-color:#667eea;background:#eef2ff;color:#4338ca}
+.tm-item.done{border-color:#22c55e;background:#dcfce7;color:#166534;cursor:default}
+.tm-item.bad{border-color:#ef4444;background:#fee2e2}
+@keyframes tmshake{0%,100%{transform:translateX(0)}30%{transform:translateX(-7px)}70%{transform:translateX(7px)}}
+.tm-item.bad{animation:tmshake .4s}
+
+/* table */
+.tterm-tbl{width:100%;border-collapse:collapse;border:1px solid #e2e8f0;border-radius:12px;overflow:hidden;font-size:13px}
+.tterm-tbl th{background:#1e3a5f;color:white;padding:10px 14px;font-size:11px;font-weight:800;text-align:left}
+.tterm-tbl td{padding:10px 14px;border-top:1px solid #f1f5f9;vertical-align:top;line-height:1.5}
+.tterm-tbl tr:nth-child(even) td{background:#f8fafc}
+.tterm-tbl tr:hover td{background:#f1f5f9}
+.tterm-tnote{font-size:11px;color:#94a3b8;margin-top:2px;font-style:italic}
+
 </style>
 </head>
 <body>
@@ -246,6 +318,7 @@ button{cursor:pointer;font-family:inherit;transition:all .2s;}
     <button class="ctab active" onclick="switchCTab('vocab')">📝 Từ vựng <span class="ctab-badge" id="badge-vocab">0</span></button>
     <button class="ctab" onclick="switchCTab('struct')">🔧 Cấu trúc <span class="ctab-badge" id="badge-struct">0</span></button>
     <button class="ctab" onclick="switchCTab('trans')">✍️ Bài dịch <span class="ctab-badge" id="badge-trans">0</span></button>
+    <button class="ctab" onclick="switchCTab('terms')">🏛️ Thuật ngữ</button>
   </div>
 </div>
 
@@ -253,6 +326,7 @@ button{cursor:pointer;font-family:inherit;transition:all .2s;}
   <div id="pane-vocab" class="pane fade-in"></div>
   <div id="pane-struct" class="pane fade-in" style="display:none;"></div>
   <div id="pane-trans" class="pane fade-in" style="display:none;"></div>
+  <div id="pane-terms" class="pane fade-in" style="display:none;"></div>
 </div>
 
 <div id="score-panel">
@@ -4227,10 +4301,11 @@ function exCard(ex, i, dir, sessIdx, C) {
 // ── INTERACTIONS ──
 function switchCTab(tab) {
   currentCTab = tab;
-  ['vocab','struct','trans'].forEach(t => {
+  ['vocab','struct','trans','terms'].forEach(t => {
     document.getElementById('pane-'+t).style.display = t===tab?'block':'none';
   });
-  document.querySelectorAll('.ctab').forEach((b,i) => b.classList.toggle('active', ['vocab','struct','trans'][i]===tab));
+  document.querySelectorAll('.ctab').forEach((b,i) => b.classList.toggle('active', ['vocab','struct','trans','terms'][i]===tab));
+  if(tab==='terms') renderTerms();
 }
 
 function switchEx(tab, idx) {
@@ -4584,6 +4659,540 @@ function esc(str) {
   if(!str) return '';
   return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/\n/g,'<br>');
 }
+
+// ══════════════════════════════════════════════════════
+// TERMS MODULE
+// ══════════════════════════════════════════════════════
+const TCATS = [
+  { id:'titles', label:'🎖️ Chức danh', color:'#dc2626', items:[
+    { ru:'Президент (Российской Федерации)', vi:'Tổng thống (Liên bang Nga)', note:'Dùng cho đứng đầu nhà nước Nga; VN dùng "Chủ tịch nước"' },
+    { ru:'Председатель государства / Глава Вьетнама', vi:'Chủ tịch nước (Việt Nam)', note:'Trong VB Nga thường viết "глава Вьетнама" hoặc "председатель Вьетнама"' },
+    { ru:'Председатель Правительства / Премьер-министр', vi:'Thủ tướng Chính phủ', note:'"Председатель Правительства" = chính thức; "Премьер-министр" = báo chí' },
+    { ru:'Заместитель Председателя Правительства / Вице-премьер', vi:'Phó Thủ tướng Chính phủ', note:'"Вице-премьер" phổ biến trong báo chí; VD: Bùi Thanh Sơn, Igor Shuvalov' },
+    { ru:'Министр иностранных дел', vi:'Bộ trưởng Ngoại giao', note:'Đứng đầu МИД; VD: "Министр иностранных дел Вьетнама Буй Тхань Шон"' },
+    { ru:'Заместитель министра (чего)', vi:'Thứ trưởng (Bộ nào)', note:'VD: заместитель министра промышленности и торговли = Thứ trưởng Bộ Công Thương' },
+    { ru:'Генеральный директор', vi:'Tổng Giám đốc', note:'Lãnh đạo điều hành cao nhất của tập đoàn/công ty' },
+    { ru:'Председатель и генеральный директор (Совета директоров)', vi:'Chủ tịch kiêm Tổng Giám đốc', note:'VD: "Председатель и генеральный директор корпорации Мицуи"' },
+    { ru:'Сопредседатель (комиссии / форума)', vi:'Đồng Chủ tịch (ủy ban / diễn đàn)', note:'Dùng trong cơ chế song phương: МПК có 2 сопредседателя' },
+    { ru:'Посол (Российской Федерации во Вьетнаме)', vi:'Đại sứ (Liên bang Nga tại Việt Nam)', note:'Chức vụ ngoại giao cao nhất; văn phòng = Посольство (Đại sứ quán)' },
+    { ru:'Советник-посланник / Торговый представитель', vi:'Tham tán / Tùy viên thương mại', note:'"Советник" = Tham tán; "Торговый представитель" = Tham tán thương mại' },
+    { ru:'Представитель (компании / организации во Вьетнаме)', vi:'Đại diện (công ty / tổ chức tại Việt Nam)', note:'Phổ biến hơn "делегат" trong văn bản kinh tế-ngoại giao' },
+    { ru:'Делегат / Участник (заседания / форума)', vi:'Đại biểu / Thành viên (phiên họp / diễn đàn)', note:'"Делегат" = đại biểu đại hội; "участник" = người tham gia rộng hơn' },
+    { ru:'Вице-президент (РЭЦ / корпорации)', vi:'Phó Chủ tịch / Phó Tổng Giám đốc (Trung tâm / Tập đoàn)', note:'Cấp 2 trong tập đoàn; khác với заместитель министра (cấp Bộ)' },
+    { ru:'Глава делегации / руководитель рабочей группы', vi:'Trưởng đoàn / Trưởng nhóm công tác', note:'"Глава" = người đứng đầu (nhấn mạnh vai trò); "руководитель" = người lãnh đạo' },
+    { ru:'Генеральный секретарь ЦК Партии', vi:'Tổng Bí thư Ban Chấp hành Trung ương Đảng', note:'ЦК = Центральный комитет = Ban Chấp hành Trung ương' },
+    { ru:'Коллеги / партнёры по переговорам / визави', vi:'Người đồng cấp / đối tác đàm phán / người đối diện', note:'"Визави" = người ngồi phía đối diện bàn = người đồng cấp trong đàm phán' },
+  ]},
+  { id:'orgs_ru', label:'🇷🇺 Cơ quan Nga', color:'#b91c1c', items:[
+    { ru:'МИД РФ — Министерство иностранных дел Российской Федерации', vi:'Bộ Ngoại giao Liên bang Nga', note:'Nguồn phát ngôn chính thức về đối ngoại' },
+    { ru:'Минэкономразвития — Министерство экономического развития', vi:'Bộ Phát triển Kinh tế Nga', note:'Theo dõi GDP, dự báo kinh tế; viết tắt МЭР' },
+    { ru:'Минфин — Министерство финансов Российской Федерации', vi:'Bộ Tài chính Liên bang Nga', note:'Phụ trách ngân sách nhà nước và thuế' },
+    { ru:'Минпромторг — Министерство промышленности и торговли', vi:'Bộ Công nghiệp và Thương mại Nga', note:'Phụ trách XNK, chương trình Made in Russia, diễn đàn TM' },
+    { ru:'Минсельхоз — Министерство сельского хозяйства Российской Федерации', vi:'Bộ Nông nghiệp Liên bang Nga', note:'Quản lý nông-lâm-thủy sản Nga; đối tác của Bộ NN&PTNT VN' },
+    { ru:'Минэнерго — Министерство энергетики Российской Федерации', vi:'Bộ Năng lượng Liên bang Nga', note:'Phụ trách dầu khí, than, điện, năng lượng tái tạo' },
+    { ru:'ФТС — Федеральная таможенная служба', vi:'Tổng cục Hải quan Liên bang Nga', note:'Công bố số liệu XNK chính thức; tương đương Tổng cục Hải quan VN' },
+    { ru:'Росстат — Федеральная служба государственной статистики', vi:'Cục Thống kê Nhà nước Liên bang Nga (Rosstat)', note:'Công bố GDP, lạm phát, dân số; tương đương GSO của Việt Nam' },
+    { ru:'ЦБ РФ — Центральный банк Российской Федерации', vi:'Ngân hàng Trung ương Liên bang Nga', note:'Phụ trách chính sách tiền tệ, lãi suất, ổn định tài chính' },
+    { ru:'Росатом — Государственная корпорация по атомной энергии', vi:'Rosatom — Tập đoàn nhà nước về năng lượng nguyên tử', note:'Xây АЭС Ниньтхуан-1; lò ВВЭР-1200; đối tác VN về điện hạt nhân' },
+    { ru:'ТАСС — Информационное агентство России', vi:'TASS — Hãng thông tấn Nhà nước Nga', note:'Nguồn tin chính thức của Chính phủ Nga; hay xuất hiện trong bài dịch' },
+    { ru:'РЭЦ — Российский экспортный центр (группа ВЭБ)', vi:'Trung tâm Xuất khẩu Nga (thuộc tập đoàn VEB)', note:'Hỗ trợ XK phi tài nguyên; "Вице-президент РЭЦ" = Phó Chủ tịch TT XK Nga' },
+    { ru:'ВЭБ.РФ — Государственная корпорация развития', vi:'VEB.RF — Tập đoàn Tài chính Phát triển Nhà nước', note:'РЭЦ là đơn vị trực thuộc ВЭБ; cung cấp tín dụng XK' },
+    { ru:'ТПП РФ — Торгово-промышленная палата', vi:'Phòng Thương mại và Công nghiệp Liên bang Nga', note:'Tổ chức phi lợi nhuận; tương đương VCCI của Việt Nam' },
+    { ru:'МЭЦ — Московский экспортный центр', vi:'Trung tâm Xuất khẩu Moskva', note:'Tổ chức xúc tiến XK hàng Moskva; GĐ Vitaly Stepanov dẫn đầu phái đoàn sang VN' },
+    { ru:'РФПИ — Российский фонд прямых инвестиций', vi:'Quỹ Đầu tư Trực tiếp Nga (RDIF)', note:'Quỹ sovereign wealth fund của Nga; đối tác quỹ đầu tư quốc tế' },
+  ]},
+  { id:'orgs_vn', label:'🇻🇳 Cơ quan VN', color:'#059669', items:[
+    { ru:'Министерство иностранных дел Вьетнама', vi:'Bộ Ngoại giao Việt Nam', note:'Trong VB Nga viết đầy đủ, không viết tắt' },
+    { ru:'Министерство финансов Вьетнама', vi:'Bộ Tài chính Việt Nam (MOF)', note:'Phụ trách ngân sách, thuế, nợ công nhà nước' },
+    { ru:'Министерство промышленности и торговли Вьетнама', vi:'Bộ Công Thương Việt Nam (MOIT)', note:'Quản lý XNK, điện lực, thương mại nội địa; đối tác của Минпромторг' },
+    { ru:'Министерство сельского хозяйства и развития сельских районов', vi:'Bộ Nông nghiệp và Phát triển Nông thôn (MARD)', note:'Tên RẤT DÀI — phải viết đủ trong bài thi! Thứ trưởng Фунг Дык Тьен' },
+    { ru:'Министерство планирования и инвестиций Вьетнама', vi:'Bộ Kế hoạch và Đầu tư (MPI)', note:'Phụ trách FDI, kế hoạch 5 năm, ODA; theo dõi số liệu FDI đăng ký' },
+    { ru:'Государственный банк Вьетнама (ГБВ)', vi:'Ngân hàng Nhà nước Việt Nam (SBV)', note:'NHTW của VN; khác với "Центральный банк" (Nga) — chú ý khi dịch' },
+    { ru:'Главное статистическое управление Вьетнама (ТСТК / ГСУ)', vi:'Tổng cục Thống kê Việt Nam (GSO)', note:'ТСТК = viết tắt theo tên tiếng Việt; công bố GDP, CPI hàng quý' },
+    { ru:'«Петровьетнам» / PetroVietnam — национальная нефтяная корпорация', vi:'Tập đoàn Dầu khí Quốc gia Việt Nam (PVN)', note:'Đối tác 40+ năm với Zarubezhneft; cùng vận hành Vietsovpetro và Rusvietpetro' },
+    { ru:'Холдинг TH Group / TH True Milk', vi:'Tập đoàn TH / TH True Milk Việt Nam', note:'Dự án chăn nuôi bò sữa tại Kaluga, Podmosk\'ye và Primorsky Krai' },
+  ]},
+  { id:'bilateral', label:'🤝 Song phương & QT', color:'#7c3aed', items:[
+    { ru:'МПК — Межправительственная комиссия по торгово-экономическому сотрудничеству', vi:'Ủy ban Liên Chính phủ về Hợp tác Kinh tế-Thương mại Nga-Việt', note:'Cơ chế họp định kỳ; có 2 Сопредседателя (Đồng Chủ tịch) mỗi bên' },
+    { ru:'МПГ — Межпарламентская группа', vi:'Nhóm Liên nghị viện Nga-Việt', note:'Cơ chế giao lưu giữa Hội đồng LB Nga và Quốc hội VN' },
+    { ru:'Вьетнамско-Российский банк (ВРБ) — основан в 2006 году', vi:'Ngân hàng Liên doanh Việt-Nga (VRB) — thành lập năm 2006', note:'"Открыт ещё в 2006 году" = thành lập từ tận năm 2006 (nhấn mạnh lâu đời)' },
+    { ru:'Вьетнамо-Российский тропический центр (Тропцентр)', vi:'Trung tâm Nhiệt đới Việt-Nga', note:'Cơ chế song phương DUY NHẤT còn tồn tại từ thời Liên Xô; đa ngành KH-CN' },
+    { ru:'ЕАЭС — Евразийский экономический союз', vi:'Liên minh Kinh tế Á-Âu (EAEU)', note:'FTA EAEU-VN có hiệu lực từ 2016; thành viên: Nga, Belarus, Kazakhstan, Armenia, Kyrgyzstan' },
+    { ru:'МВФ — Международный валютный фонд', vi:'Quỹ Tiền tệ Quốc tế (IMF)', note:'"Перспективы мировой экономики МВФ" = Báo cáo Triển vọng KT thế giới IMF' },
+    { ru:'ВБ — Всемирный банк', vi:'Ngân hàng Thế giới (WB)', note:'"Обновление экономики ВБ" = Bản cập nhật Tình hình KT của WB' },
+    { ru:'АБР — Азиатский банк развития', vi:'Ngân hàng Phát triển Châu Á (ADB)', note:'Dự báo tăng trưởng VN 8% (2025) theo ADB; cao hơn dự báo của IMF' },
+    { ru:'АСЕАН — Ассоциация государств Юго-Восточной Азии', vi:'Hiệp hội các Quốc gia Đông Nam Á (ASEAN)', note:'VN đứng thứ 6 ĐNA (ЮВА) theo IMF; ĐNA = Юго-Восточная Азия' },
+    { ru:'ВТО — Всемирная торговая организация', vi:'Tổ chức Thương mại Thế giới (WTO)', note:'VN gia nhập 2007; Nga gia nhập 2012' },
+    { ru:'СП «Вьетсовпетро» — с 1981 года, работает во Вьетнаме', vi:'Liên doanh Vietsovpetro — từ 1981, hoạt động tại Việt Nam', note:'СП = совместное предприятие = liên doanh; thăm dò tại thềm lục địa VN' },
+    { ru:'СП «Русвьетпетро» — работает на территории России', vi:'Liên doanh Rusvietpetro — hoạt động trên lãnh thổ Nga', note:'Ngược lại với Vietsovpetro: VN tham gia khai thác dầu TẠI NGA' },
+  ]},
+  { id:'terms', label:'📋 Thuật ngữ', color:'#d97706', items:[
+    { ru:'МОВ / MOU — Меморандум о взаимопонимании', vi:'Biên bản ghi nhớ / Bản ghi nhớ (MOU)', note:'Ít ràng buộc hơn hiệp định; thường ký trước khi đàm phán chính thức' },
+    { ru:'ТЭО — Технико-экономическое обоснование', vi:'Luận chứng kinh tế-kỹ thuật (Feasibility Study)', note:'Tài liệu đánh giá tính khả thi trước khi đầu tư dự án' },
+    { ru:'ПИИ — Прямые иностранные инвестиции', vi:'FDI — Đầu tư Trực tiếp Nước ngoài', note:'Khác với "портфельные инвестиции" (đầu tư danh mục, không kiểm soát)' },
+    { ru:'СПГ — Сжиженный природный газ', vi:'LNG — Khí thiên nhiên hoá lỏng', note:'Nga XK LNG sang châu Á qua tàu chuyên dụng; dự án phía Đông của Газпром' },
+    { ru:'ВИЭ — Возобновляемые источники энергии', vi:'Năng lượng tái tạo (Renewable Energy)', note:'VN cam kết trung hòa carbon (углеродная нейтральность) vào 2050' },
+    { ru:'ВВЭР-1200 — Водо-водяной энергетический реактор', vi:'Lò phản ứng nước-nước thế hệ 3+ (VVER-1200)', note:'Lò của Rosatom dùng cho АЭС Ниньтхуан-1; 2 tổ máy x 1.200 MW = 2.400 MW' },
+    { ru:'ОЭЗ — Особая экономическая зона', vi:'Khu kinh tế đặc biệt (SEZ)', note:'VN có nhiều KKT ven biển; Nga có ОЭЗ Viễn Đông thu hút FDI châu Á' },
+    { ru:'Повестка дня — программа заседания / переговоров', vi:'Chương trình nghị sự / Chương trình cuộc họp', note:'"Повестка никогда не была такой обширной" = chương trình họp chưa bao giờ rộng vậy' },
+    { ru:'Ратификация — официальное утверждение договора парламентом', vi:'Phê chuẩn (do Quốc hội/Nghị viện thông qua)', note:'"Скорейшая ратификация с обеих сторон" = phê chuẩn sớm nhất từ cả hai phía' },
+    { ru:'Несырьевой неэнергетический экспорт', vi:'Xuất khẩu phi tài nguyên và phi năng lượng', note:'Chỉ tiêu Nga theo dõi để đánh giá đa dạng hóa KT; Moskva chiếm 20% XK này sang ĐNA' },
+    { ru:'Всестороннее стратегическое партнёрство Россия–Вьетнам', vi:'Quan hệ Đối tác Chiến lược Toàn diện Nga–Việt Nam', note:'Cấp quan hệ cao nhất; ký kết nâng cấp trong chuyến thăm cấp nhà nước' },
+    { ru:'Совместное заявление об углублении стратегического партнёрства', vi:'Tuyên bố chung về tăng cường quan hệ đối tác chiến lược', note:'Văn kiện ký kết sau cuộc gặp thượng đỉnh; không có giá trị pháp lý ràng buộc' },
+    { ru:'Соглашение об избежании двойного налогообложения', vi:'Hiệp định tránh đánh thuế hai lần', note:'"Скорейшая ратификация соглашения" = phê chuẩn sớm nhất hiệp định này' },
+    { ru:'Взаимный доступ продуктов питания на рынки двух стран', vi:'Việc tiếp cận thị trường lẫn nhau cho hàng thực phẩm hai nước', note:'"Открытие взаимного доступа" = mở cửa thị trường cho hàng thực phẩm hai chiều' },
+  ]},
+  { id:'projects', label:'🏗️ Dự án & Trung tâm', color:'#0891b2', items:[
+    { ru:'АЭС «Ниньтхуан-1» — атомная электростанция', vi:'Nhà máy điện hạt nhân Ninh Thuận 1', note:'2 tổ máy ВВЭР-1200 (2.400 MW); tạm dừng 2016 vì nợ công VN vượt 65% GDP' },
+    { ru:'Центр ядерной науки и технологий (исследовательский реактор 10–15 МВт)', vi:'Trung tâm Khoa học và Công nghệ Hạt nhân (lò NC 10–15 MW)', note:'Thay thế lò Đà Lạt hiện tại; Rosatom là đối tác xây dựng' },
+    { ru:'«Зарубежнефть» — российская нефтегазовая компания', vi:'Zarubezhneft — Công ty dầu khí nhà nước Nga (HĐ quốc tế)', note:'Hợp tác 40+ năm với PetroVietnam; TGĐ gặp TT Phạm Minh Chính 27/11' },
+    { ru:'Корпорация «Мицуи» — японский многоотраслевой конгломерат', vi:'Tập đoàn Mitsui — Tập đoàn đa ngành Nhật Bản', note:'"Председатель и генеральный директор корпорации Мицуи" = Chủ tịch kiêm TGĐ Mitsui' },
+    { ru:'Проект TH Group на Дальнем Востоке (Приморский край)', vi:'Dự án TH Group tại vùng Viễn Đông (Primorsky Krai)', note:'6.000 bò sữa + nhà máy 250 tấn/ngày + tổng đầu tư 5.200 tỷ đồng' },
+    { ru:'Животноводческий комплекс TH Group в Подмосковье (6 000 голов)', vi:'Khu chăn nuôi TH Group ở vùng ngoại ô Moskva (6.000 đầu bò)', note:'Giai đoạn 1 đã hoàn thành; dự án trong tỉnh Kaluga' },
+    { ru:'Энергетический центр во Вьетнаме (предложение «Зарубежнефти»)', vi:'Trung tâm năng lượng tại Việt Nam (đề xuất của Zarubezhneft)', note:'TGĐ Zarubezhneft đề xuất với TT Phạm Minh Chính; chưa có quyết định chính thức' },
+    { ru:'Российско-Японская МПК по торгово-экономическим вопросам', vi:'Ủy ban Liên Chính phủ Nga-Nhật về Hợp tác KT-Thương mại', note:'Сопредседатели: Шувалов (Nga) và Taro Kono (Nhật); phiên họp thứ 13 bàn về Viễn Đông' },
+    { ru:'Московский центр международного сотрудничества', vi:'Trung tâm Hợp tác Quốc tế Moskva', note:'Đại diện A. Morozov; chia sẻ công nghệ CNTT, y tế, nông nghiệp với VN' },
+  ]},
+
+  ,{ id:'phrases', label:'🖊️ Cụm từ & Ngữ pháp', color:'#0891b2', items:[
+    { ru:'председатель (Н.п.) — người chủ trì / chủ tịch phiên họp', vi:'Chủ trì / Chủ tịch (phiên họp)', note:'Khác với Президент (nguyên thủ); председатель dùng cho người điều hành cuộc họp, tổ chức' },
+    { ru:'председательствовать (где / на чём) — chủ trì tại / trong', vi:'Chủ trì (tại hội nghị / trong phiên họp)', note:'VD: "сопредседательствовали заместитель министра" = hai thứ trưởng đồng chủ trì; на форуме = tại diễn đàn' },
+    { ru:'сессия (Н.п.) — kỳ họp (của cả một hội đồng/nghị viện)', vi:'Kỳ họp (của nghị viện / hội đồng)', note:'Phân biệt: сессия = cả kỳ họp (nhiều ngày); заседание = một phiên họp cụ thể trong kỳ' },
+    { ru:'заседание (Н.п.) — phiên họp (một buổi cụ thể)', vi:'Phiên họp (một buổi / một lần họp)', note:'VD: "на четвёртом заседании МПК" = tại phiên họp thứ tư của UBLLCP; "заседание комиссии" = phiên họp ủy ban' },
+    { ru:'сессия → заседание: одна сессия может включать несколько заседаний', vi:'Sессия ⊃ заседание: một kỳ họp có thể gồm nhiều phiên họp', note:'Ví dụ: сессия Национального собрания = kỳ họp Quốc hội; mỗi ngày trong kỳ đó là một заседание' },
+    { ru:'комиссия / комитет по + Д.п. (какому вопросу)', vi:'Ủy ban / Tiểu ban về + vấn đề gì (Д.п.)', note:'VD: комиссия по торгово-экономическим вопросам = ủy ban về vấn đề KT-TM; комитет по энергетике = ủy ban về năng lượng' },
+    { ru:'в ней / в нём приняли участие (кто)', vi:'Trong đó (cơ quan đó), những ai tham gia', note:'"Комиссия" — женского рода → в ней; "комитет" — мужского рода → в нём' },
+    { ru:'считать кого/что + Т.п. (считать это важным)', vi:'Coi ai/cái gì là ... (quan trọng) — + Т.п.', note:'VD: "считать это важным" = coi điều này là quan trọng; согласование по числу: важным/важными' },
+    { ru:'считать важным + инф. (считать важным обсудить)', vi:'Cho rằng điều quan trọng là + động từ nguyên mẫu', note:'VD: "считают важным продолжить переговоры" = cho rằng điều quan trọng là tiếp tục đàm phán' },
+    { ru:'высоко оценить / высоко оценивать (что) — đánh giá cao', vi:'Đánh giá cao (cái gì)', note:'"Министр высоко оценил достижения центра" = Bộ trưởng đánh giá cao thành tích của trung tâm' },
+    { ru:'придавать важное значение (чему) — Д.п.', vi:'Coi trọng / gắn tầm quan trọng (cho cái gì)', note:'"Придавать важное значение сотрудничеству" = coi trọng hợp tác; придавать значение + Д.п.' },
+    { ru:'прилагать все усилия к чему / для чего — делать всё возможное', vi:'Dồn mọi nỗ lực vào / làm tất cả những gì có thể', note:'"Прилагать усилия для продвижения" = nỗ lực thúc đẩy; prилагать = prикладывать (hoàn thành)' },
+    { ru:'объединить усилия по + Д.п. — chung tay nỗ lực', vi:'Chung tay nỗ lực vì / trong (lĩnh vực nào)', note:'"Объединить усилия по продвижению бренда" = chung tay quảng bá thương hiệu; по + Д.п.' },
+    { ru:'достичь / достигнуть (чего) — Р.п. (достиг успехов / уровня)', vi:'Đạt được (thành tích / mức độ nào đó) — Р.п.', note:'"Товарооборот достиг 1,34 млрд" = KN đạt 1,34 tỷ; chú ý: достигнуть là hoàn thành của достигать' },
+    { ru:'добиться / добиваться (чего) — Р.п. (добились достижений)', vi:'Đạt được / giành được (kết quả) qua nỗ lực — Р.п.', note:'"Добились определённых достижений" = đạt được những thành tích nhất định; nhấn mạnh quá trình nỗ lực' },
+    { ru:'поднять / вывести отношения на новый уровень / на новую высоту', vi:'Đưa quan hệ lên tầm cao mới / lên một tầm cao hơn', note:'"Внести вклад в достижение нового уровня двусторонних отношений" — cũng dùng cụm này' },
+    { ru:'внести (реальный) вклад в (достижение чего) — Р.п.', vi:'Đóng góp (thực sự) vào (việc đạt được điều gì)', note:'"Внести реальный вклад в повышение уровня жизни" = đóng góp thực sự vào việc nâng cao mức sống' },
+    { ru:'вносить активный вклад в + В.п. (развитие, обеспечение)', vi:'Tích cực đóng góp vào (phát triển / đảm bảo...)', note:'"Тропцентр вносит активный вклад в научно-технологическое развитие" = Tропцентр tích cực đóng góp vào PTKHCN' },
+    { ru:'способствовать (чему) — Д.п. (укреплению, развитию)', vi:'Tạo điều kiện thuận lợi cho / thúc đẩy (cái gì) — Д.п.', note:'"Способствует укреплению партнёрства" = tạo điều kiện củng cố quan hệ ĐT; Д.п. sau способствовать' },
+    { ru:'преимущественно (нареч.) — chủ yếu là, chủ yếu gồm', vi:'Chủ yếu là / gồm chủ yếu', note:'"Преимущественно водную продукцию, одежду" = chủ yếu là thuỷ sản, hàng may mặc' },
+    { ru:'в размере / в стоимости (чего) — trị giá / có giá trị bằng', vi:'Trị giá / Có giá trị (bao nhiêu)', note:'"В размере 5200 млрд донгов" = trị giá 5.200 tỷ đồng; hai cách nói đều đúng' },
+    { ru:'из + Р.п. (страны без "с"): из Лаоса, из Китая, из России', vi:'Từ + tên nước (dùng "из" — KHÔNG dùng "с")', note:'Quy tắc: нейтральные страны → из: из Лаоса, из Вьетнама, из Японии. Ngoại lệ "с": с Украины (cũ), с Кубы' },
+    { ru:'с + Р.п. (острова / полуострова): с Кубы, с Тайваня', vi:'Từ (đảo / bán đảo) — dùng "с" thay vì "из"', note:'Đảo, bán đảo, vùng cao thường dùng "с"; song "с Вьетнама" là SAI — phải dùng "из Вьетнама"' },
+  ]},
+  { id:'institutions', label:'🏛️ Nghị viện & Ban ngành', color:'#7c3aed', items:[
+    { ru:'Федеральное собрание РФ — двухпалатный парламент', vi:'Nghị viện / Quốc hội Liên bang Nga (lưỡng viện)', note:'Gồm 2 viện: Совет Федерации (Thượng viện) + Государственная Дума (Hạ viện)' },
+    { ru:'Государственная Дума (ГД) — нижняя палата', vi:'Duma Quốc gia — Hạ viện (do dân bầu trực tiếp)', note:'Người đứng đầu: Спикер (Chủ tịch Hạ viện / Chủ tịch Duma); hiện là Вячеслав Володин' },
+    { ru:'Совет Федерации (СФ) — верхняя палата', vi:'Hội đồng Liên bang — Thượng viện (do các chủ thể liên bang)', note:'Người đứng đầu: Председатель СФ = Chủ tịch Thượng viện; hiện là Валентина Матвиенко' },
+    { ru:'Национальное собрание Социалистической Республики Вьетнам', vi:'Quốc hội nước CHXHCN Việt Nam', note:'Dùng "Национальное собрание" — KHÔNG dùng "Парламент Вьетнама" trong văn bản chính thức Nga' },
+    { ru:'Межпарламентская комиссия (МПК) по сотрудничеству Госдума–Нацсобрание', vi:'Ủy ban Liên nghị viện về hợp tác Duma–Quốc hội VN', note:'VD: "четвёртое заседание Межпарламентской комиссии" = phiên họp thứ tư của Ủy ban LNV' },
+    { ru:'Спикер — председатель законодательного органа', vi:'Chủ tịch Hạ viện / Chủ tịch cơ quan lập pháp (Speaker)', note:'"Спикер" dùng cho Госдума; "Председатель" dùng cho Совет Федерации' },
+    { ru:'Официальный представитель МИД — người phát ngôn Bộ NG', vi:'Người phát ngôn Bộ Ngoại giao', note:'VD: Мария Захарова = Người phát ngôn MИД РФ nổi tiếng; "официальный представитель" = đại diện chính thức' },
+    { ru:'Председатель Комитета ГД по энергетике', vi:'Chủ tịch Ủy ban Năng lượng của Duma Quốc gia', note:'VD: Николай Шульгинов — phát biểu tại phiên họp LNV Nga-VN về hợp tác hạt nhân' },
+    { ru:'Председатель Комитета / Комиссии по внешним отношениям (связям)', vi:'Chủ tịch Ủy ban Đối ngoại (của Quốc hội / Nghị viện)', note:'"Комитет по внешним связям" (Nga) hay "Ủy ban Đối ngoại" (VN) — cơ quan đối ngoại của nghị viện' },
+    { ru:'ведомство (Н.п.) / ведомства (Р.п. мн.ч.) — cơ quan hữu quan', vi:'Bộ / Cơ quan (chuyên ngành)', note:'"Заинтересованные ведомства" = các bộ/ban ngành hữu quan; ведомство rộng hơn министерство' },
+    { ru:'министерства и ведомства — bộ và cơ quan ngang bộ', vi:'Các bộ và ban ngành', note:'Cách nói ghép chuẩn: "министерства и ведомства" = "các bộ và cơ quan hữu quan"; dùng khi liệt kê chung' },
+    { ru:'Комитет Государственной Думы по + Д.п. (энергетике, финансам...)', vi:'Ủy ban của Duma Quốc gia về + lĩnh vực (Д.п.)', note:'Mỗi Ủy ban phụ trách 1 lĩnh vực: энергетике / финансам / международным делам...' },
+    { ru:'Вьетнамская энергетическая ассоциация', vi:'Hiệp hội Năng lượng Việt Nam', note:'"Неоднократно призывала власти вернуться к обсуждению атомной энергетики" = nhiều lần kiến nghị CP xem xét lại ĐHN' },
+    { ru:'нефтепродукты (мн.ч.) — sản phẩm từ dầu mỏ / xăng dầu', vi:'Xăng dầu / Các sản phẩm dầu mỏ', note:'Нефть = dầu thô; нефтепродукты = sản phẩm chế biến (xăng, dầu diesel, dầu nhớt...)' },
+    { ru:'удобрения (мн.ч.) — phân bón', vi:'Phân bón', note:'Nga là nhà XK phân bón lớn; "минеральные удобрения" = phân bón khoáng; удобрение (số ít) ít dùng' },
+    { ru:'древесина (ед.ч.) — gỗ (nguyên liệu)', vi:'Gỗ (nguyên liệu / gỗ chế biến)', note:'Phân biệt: лес = rừng; древесина = gỗ (nguyên liệu); деревянные изделия = sản phẩm gỗ' },
+    { ru:'каучук (ед.ч.) — cao su (tự nhiên)', vi:'Cao su (thiên nhiên)', note:'Натуральный каучук = cao su tự nhiên; синтетический каучук = cao su tổng hợp; VN là nước XK cao su lớn' },
+    { ru:'текстильные изделия / одежда — hàng dệt may', vi:'Hàng dệt may / Quần áo', note:'"Преимущественно водную продукцию, одежду (текстильные изделия)" = chủ yếu thuỷ sản, hàng may mặc' },
+    { ru:'водная (рыбная) продукция — thuỷ sản', vi:'Thuỷ sản / Sản phẩm từ biển / sông', note:'Cũng dùng: морепродукты (hải sản), рыбная продукция (sản phẩm cá); "водная" rộng hơn' },
+    { ru:'правительство / администрация (чего) — chính phủ / chính quyền', vi:'Chính phủ / Chính quyền (của nước / vùng nào)', note:'"Администрация" dùng cho chính quyền địa phương (tỉnh, thành); "правительство" dùng cho cấp TW' },
+  ]},
+];
+
+function tAllItems(){
+  const a=[];
+  TCATS.forEach(c=>c.items.forEach(it=>a.push({...it,cid:c.id,clabel:c.label,ccolor:c.color})));
+  return a;
+}
+
+let tMode='flash', tCat='all', tDir='ru2vi', tFlipped=new Set();
+// quiz
+let tqAll=[], tqIdx=0, tqCorrect=0, tqWrong=0, tqDone=false;
+// match
+let tmAll=[], tmOffset=0, tmSel=null, tmBatchDone=0, tmTotalDone=0;
+
+// ── helpers ──
+function tItems(){
+  if(tCat==='all') return tAllItems();
+  const c=TCATS.find(x=>x.id===tCat);
+  return c ? c.items.map(it=>({...it,cid:c.id,clabel:c.label,ccolor:c.color})) : [];
+}
+function te(s){ return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── MAIN RENDER ──
+function renderTerms(){
+  const p=document.getElementById('pane-terms');
+  if(!p) return;
+  const items=tItems();
+
+  const modeBtns=[
+    {id:'flash',icon:'🃏',lbl:'Thẻ lật'},
+    {id:'quiz', icon:'🧠',lbl:'Trắc nghiệm'},
+    {id:'match',icon:'🔗',lbl:'Nối cặp'},
+    {id:'table',icon:'📋',lbl:'Bảng tra'},
+  ].map(m=>`<button class="tmode-btn${tMode===m.id?' active':''}" onclick="tSetMode('${m.id}')">${m.icon} ${m.lbl}</button>`).join('');
+
+  const catBtns=TCATS.map(c=>{
+    const act=tCat===c.id;
+    return `<button class="tcat-btn${act?' active':''}"
+      style="${act?'background:'+c.color+';border-color:'+c.color:''}"
+      onclick="tSetCat('${c.id}')">${c.label} <small>${c.items.length}</small></button>`;
+  }).join('');
+  const allAct=tCat==='all';
+
+  const dirBar = tMode!=='table' ? `<div class="tdir-bar">
+    <span class="tdir-label">Hướng:</span>
+    <button class="tcat-btn${tDir==='ru2vi'?' active':''}"
+      style="${tDir==='ru2vi'?'background:#4338ca;border-color:#4338ca;color:white':''}"
+      onclick="tSetDir('ru2vi')">🇷🇺 Nga → 🇻🇳 Việt</button>
+    <button class="tcat-btn${tDir==='vi2ru'?' active':''}"
+      style="${tDir==='vi2ru'?'background:#4338ca;border-color:#4338ca;color:white':''}"
+      onclick="tSetDir('vi2ru')">🇻🇳 Việt → 🇷🇺 Nga</button>
+  </div>` : '';
+
+  let body='';
+  if(tMode==='flash') body=tRenderFlash(items);
+  else if(tMode==='quiz') body=tRenderQuiz();
+  else if(tMode==='match') body=tRenderMatch();
+  else body=tRenderTable(items);
+
+  p.innerHTML=`
+  <div class="terms-hero">
+    <div class="terms-hero-title">🏛️ Thuật ngữ Đặc thù — Ôn thi Biên dịch</div>
+    <div class="terms-hero-sub">Tên cơ quan · Chức danh · Dự án · Viết tắt — ${tAllItems().length} thuật ngữ · 6 nhóm</div>
+    <div class="tmode-bar">${modeBtns}</div>
+  </div>
+  <div class="tcat-bar">
+    <button class="tcat-btn${allAct?' active':''}"
+      style="${allAct?'background:#1e3a5f;border-color:#1e3a5f;color:white':''}"
+      onclick="tSetCat('all')">📚 Tất cả <small>${tAllItems().length}</small></button>
+    ${catBtns}
+  </div>
+  ${dirBar}
+  ${body}`;
+
+  if(tMode==='quiz') tqBind();
+  if(tMode==='match') tmBind();
+}
+
+// ─────────────────────────────────────────────────────
+// FLASH
+// ─────────────────────────────────────────────────────
+function tRenderFlash(items){
+  const cnt=[...tFlipped].filter(k=>k.startsWith(tCat+'-')).length;
+  const cards=items.map((it,i)=>{
+    const q=tDir==='ru2vi'?it.ru:it.vi;
+    const a=tDir==='ru2vi'?it.vi:it.ru;
+    const rev=tFlipped.has(tCat+'-'+i);
+    return `<div class="tcard${rev?' revealed':''}" id="tfc-${i}"
+      style="--tcard-color:${it.ccolor}" onclick="tFlip(${i})"
+      data-border="${it.ccolor}">
+      <div class="tcard-idx">${i+1}/${items.length}</div>
+      <div class="tcard-tag" style="color:${it.ccolor}">${te(it.clabel)}</div>
+      <div class="tcard-q">${te(q)}</div>
+      <div class="tcard-hint">👆 Click để xem nghĩa</div>
+      <div class="tcard-a" style="color:${it.ccolor}">${te(a)}
+        ${it.note?`<div class="tcard-note">💡 ${te(it.note)}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  return `
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+    <span style="font-size:13px;font-weight:700;color:#64748b;">Đã xem: <strong style="color:#4338ca">${cnt}</strong>/${items.length}</span>
+    <div style="display:flex;gap:8px;">
+      <button class="tcat-btn" onclick="tRevealAll(${items.length})">👁 Hiện tất cả</button>
+      <button class="tcat-btn" onclick="tResetAll()">🔄 Reset</button>
+    </div>
+  </div>
+  <div class="terms-grid">${cards}</div>`;
+}
+
+window.tFlip=function(i){
+  const k=tCat+'-'+i;
+  const card=document.getElementById('tfc-'+i);
+  if(!card) return;
+  if(tFlipped.has(k)){tFlipped.delete(k);card.classList.remove('revealed');}
+  else{tFlipped.add(k);card.classList.add('revealed');}
+  const cnt=[...tFlipped].filter(x=>x.startsWith(tCat+'-')).length;
+  const el=document.querySelector('#pane-terms strong[style*="4338ca"]');
+  if(el) el.textContent=cnt;
+};
+window.tRevealAll=function(n){
+  for(let i=0;i<n;i++){
+    tFlipped.add(tCat+'-'+i);
+    const c=document.getElementById('tfc-'+i);
+    if(c) c.classList.add('revealed');
+  }
+  const el=document.querySelector('#pane-terms strong[style*="4338ca"]');
+  if(el) el.textContent=n;
+};
+window.tResetAll=function(){ tFlipped.clear(); renderTerms(); };
+
+// ─────────────────────────────────────────────────────
+// QUIZ
+// ─────────────────────────────────────────────────────
+function tRenderQuiz(){
+  tqAll=[...tItems()].sort(()=>Math.random()-.5);
+  tqIdx=0; tqCorrect=0; tqWrong=0; tqDone=false;
+  return `<div class="tq-wrap">
+    <div class="tq-progbar"><div class="tq-progfill" id="tqbar" style="width:0%"></div></div>
+    <div class="tq-stats">
+      <div class="tq-stat">Câu: <strong id="tqnum">-</strong></div>
+      <div class="tq-stat">✅ <strong id="tqok" style="color:#059669">0</strong></div>
+      <div class="tq-stat">❌ <strong id="tqbad" style="color:#dc2626">0</strong></div>
+    </div>
+    <div class="tq-card" id="tqcard">
+      <div class="tq-badge" id="tqbadge"></div>
+      <div class="tq-counter" id="tqcnt"></div>
+      <div class="tq-q" id="tqq">Đang tải...</div>
+      <div class="tq-note" id="tqnote"></div>
+    </div>
+    <div class="tq-choices" id="tqchoices"></div>
+    <div style="text-align:center;gap:8px;display:flex;justify-content:center;flex-wrap:wrap;">
+      <button class="tcat-btn" id="tqnextbtn" style="display:none;border-color:#4338ca;color:#4338ca" onclick="tqNext()">Câu tiếp ➡️</button>
+      <button class="tcat-btn" style="border-color:#dc2626;color:#dc2626" onclick="renderTerms()">🔄 Làm lại</button>
+    </div>
+    <div class="tq-finish" id="tqfinish">
+      <div style="font-size:30px;margin-bottom:8px">🎉</div>
+      <div style="font-size:17px;font-weight:800;color:#166534;margin-bottom:6px">Hoàn thành!</div>
+      <div style="font-size:13px;color:#64748b" id="tqresult"></div>
+      <button class="tcat-btn" onclick="renderTerms()" style="margin-top:12px;border-color:#059669;color:#059669">🔄 Làm lại từ đầu</button>
+    </div>
+  </div>`;
+}
+
+function tqBind(){ tqShowCard(); }
+
+function tqShowCard(){
+  if(tqIdx>=tqAll.length){ tqFinish(); return; }
+  const it=tqAll[tqIdx];
+  const q=tDir==='ru2vi'?it.ru:it.vi;
+  const correct=tDir==='ru2vi'?it.vi:it.ru;
+
+  // Build 4 choices: 1 correct + 3 random wrong
+  const pool=tqAll.filter((_,i)=>i!==tqIdx);
+  const wrongs=pool.sort(()=>Math.random()-.5).slice(0,3).map(w=>tDir==='ru2vi'?w.vi:w.ru);
+  const choices=[...wrongs,correct].sort(()=>Math.random()-.5);
+  const correctIdx=choices.indexOf(correct);
+
+  document.getElementById('tqcard').className='tq-card';
+  document.getElementById('tqbadge').textContent=it.clabel||'';
+  document.getElementById('tqcnt').textContent=(tqIdx+1)+'/'+tqAll.length;
+  document.getElementById('tqq').textContent=q;
+  document.getElementById('tqnote').textContent='';
+  document.getElementById('tqbar').style.width=(tqIdx/tqAll.length*100)+'%';
+  document.getElementById('tqnum').textContent=(tqIdx+1)+'/'+tqAll.length;
+  document.getElementById('tqnextbtn').style.display='none';
+  const fin=document.getElementById('tqfinish'); if(fin) fin.style.display='none';
+
+  // Render choices with data attributes — NO complex inline onclick
+  document.getElementById('tqchoices').innerHTML=choices.map((c,i)=>
+    `<button class="tq-choice" data-ci="${i}" data-correct="${i===correctIdx}">${te(c)}</button>`
+  ).join('');
+  // Store current correct text for note reveal
+  window._tqCorrectIdx=correctIdx;
+  window._tqNote=it.note||'';
+}
+
+function tqBind(){
+  tqShowCard();
+  // delegate click on choices
+  const choicesEl=document.getElementById('tqchoices');
+  if(choicesEl){
+    choicesEl.addEventListener('click',function(e){
+      const btn=e.target.closest('.tq-choice');
+      if(!btn || btn.disabled) return;
+      const isCorrect=btn.dataset.correct==='true';
+      // disable all
+      choicesEl.querySelectorAll('.tq-choice').forEach(b=>b.disabled=true);
+      // mark
+      btn.classList.add(isCorrect?'hit':'miss');
+      if(!isCorrect){
+        choicesEl.querySelectorAll('.tq-choice').forEach(b=>{
+          if(b.dataset.correct==='true') b.classList.add('hit');
+        });
+      }
+      if(isCorrect){tqCorrect++; document.getElementById('tqcard').classList.add('ok');}
+      else{tqWrong++; document.getElementById('tqcard').classList.add('bad');}
+      document.getElementById('tqok').textContent=tqCorrect;
+      document.getElementById('tqbad').textContent=tqWrong;
+      // show note
+      if(window._tqNote){
+        document.getElementById('tqnote').textContent='💡 '+window._tqNote;
+        document.getElementById('tqcard').classList.add('show-note');
+      }
+      document.getElementById('tqnextbtn').style.display='inline-block';
+    });
+  }
+}
+
+window.tqNext=function(){
+  tqIdx++;
+  tqShowCard();
+  // re-delegate
+  const choicesEl=document.getElementById('tqchoices');
+  if(choicesEl){
+    const old=choicesEl.cloneNode(true);
+    choicesEl.parentNode.replaceChild(old,choicesEl);
+    old.addEventListener('click',function(e){
+      const btn=e.target.closest('.tq-choice');
+      if(!btn||btn.disabled) return;
+      const isCorrect=btn.dataset.correct==='true';
+      old.querySelectorAll('.tq-choice').forEach(b=>b.disabled=true);
+      btn.classList.add(isCorrect?'hit':'miss');
+      if(!isCorrect) old.querySelectorAll('.tq-choice').forEach(b=>{if(b.dataset.correct==='true') b.classList.add('hit');});
+      if(isCorrect){tqCorrect++;document.getElementById('tqcard').classList.add('ok');}
+      else{tqWrong++;document.getElementById('tqcard').classList.add('bad');}
+      document.getElementById('tqok').textContent=tqCorrect;
+      document.getElementById('tqbad').textContent=tqWrong;
+      if(window._tqNote){
+        document.getElementById('tqnote').textContent='💡 '+window._tqNote;
+        document.getElementById('tqcard').classList.add('show-note');
+      }
+      document.getElementById('tqnextbtn').style.display='inline-block';
+    });
+  }
+};
+
+function tqFinish(){
+  const card=document.getElementById('tqcard'); if(card) card.style.display='none';
+  const ch=document.getElementById('tqchoices'); if(ch) ch.style.display='none';
+  document.getElementById('tqnextbtn').style.display='none';
+  const fin=document.getElementById('tqfinish'); if(!fin) return;
+  fin.style.display='block';
+  const pct=Math.round(tqCorrect/Math.max(tqAll.length,1)*100);
+  document.getElementById('tqresult').textContent=
+    'Đúng '+tqCorrect+'/'+tqAll.length+' ('+pct+'%) — '+(pct>=80?'✅ Xuất sắc!':pct>=60?'🟡 Cần ôn thêm':'❌ Cần ôn kỹ hơn');
+}
+
+// ─────────────────────────────────────────────────────
+// MATCH
+// ─────────────────────────────────────────────────────
+const TM_BATCH=8;
+function tRenderMatch(){
+  tmAll=[...tItems()].sort(()=>Math.random()-.5);
+  tmOffset=0; tmSel=null; tmBatchDone=0; tmTotalDone=0;
+  return `<div id="tmwrap">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px;">
+      <span style="font-size:13px;font-weight:700;color:#64748b;">Nối đúng cặp — Đúng <strong id="tmscore" style="color:#4338ca">0</strong> / ${tItems().length}</span>
+      <button class="tcat-btn" onclick="tmRestart()">🔄 Bộ mới</button>
+    </div>
+    <div class="tm-wrap">
+      <div><div class="tm-col-label">🇷🇺 Tiếng Nga</div><div id="tml"></div></div>
+      <div><div class="tm-col-label">🇻🇳 Tiếng Việt</div><div id="tmr"></div></div>
+    </div>
+    <div id="tmnext" style="text-align:center;margin-top:14px;display:none;">
+      <button class="tcat-btn" style="border-color:#059669;color:#059669" onclick="tmLoadNext()">Bộ tiếp theo ➡️</button>
+    </div>
+    <div id="tmfinish" style="display:none;text-align:center;padding:24px;background:#f0fdf4;border:2px solid #22c55e;border-radius:14px;margin-top:16px;">
+      🎉 <strong style="color:#166534">Hoàn thành tất cả ${tItems().length} cặp!</strong>
+      <br><button class="tcat-btn" onclick="tmRestart()" style="margin-top:10px;border-color:#059669;color:#059669">🔄 Làm lại</button>
+    </div>
+  </div>`;
+}
+
+function tmBind(){ tmLoadBatch(); }
+
+function tmLoadBatch(){
+  const batch=tmAll.slice(tmOffset,tmOffset+TM_BATCH);
+  if(!batch.length) return;
+  window._tmBatch=batch; tmBatchDone=0; tmSel=null;
+
+  const lefts=batch.map((it,i)=>({i,text:tDir==='ru2vi'?it.ru:it.vi,pair:i}));
+  const rights=batch.map((it,i)=>({i,text:tDir==='ru2vi'?it.vi:it.ru,pair:i})).sort(()=>Math.random()-.5);
+
+  document.getElementById('tml').innerHTML=lefts.map(x=>
+    `<div class="tm-item" id="tmi-L-${x.i}" data-side="L" data-i="${x.i}" data-pair="${x.pair}">${te(x.text)}</div>`
+  ).join('');
+  document.getElementById('tmr').innerHTML=rights.map(x=>
+    `<div class="tm-item" id="tmi-R-${x.i}" data-side="R" data-i="${x.i}" data-pair="${x.pair}">${te(x.text)}</div>`
+  ).join('');
+}
+
+function tmBind(){
+  tmLoadBatch();
+  ['tml','tmr'].forEach(colId=>{
+    const col=document.getElementById(colId);
+    if(!col) return;
+    col.addEventListener('click',function(e){
+      const item=e.target.closest('.tm-item');
+      if(!item||item.classList.contains('done')) return;
+      const side=item.dataset.side, i=+item.dataset.i, pair=+item.dataset.pair;
+      if(!tmSel){
+        document.querySelectorAll('.tm-item.sel').forEach(x=>x.classList.remove('sel'));
+        item.classList.add('sel');
+        tmSel={side,i,pair};
+        return;
+      }
+      if(tmSel.side===side){
+        document.querySelectorAll('.tm-item.sel').forEach(x=>x.classList.remove('sel'));
+        item.classList.add('sel');
+        tmSel={side,i,pair};
+        return;
+      }
+      // evaluate
+      const prev=tmSel; tmSel=null;
+      document.querySelectorAll('.tm-item.sel').forEach(x=>x.classList.remove('sel'));
+      if(prev.pair===pair){
+        // correct
+        [document.getElementById('tmi-'+prev.side+'-'+prev.i), item].forEach(el=>{if(el) el.classList.add('done');});
+        tmBatchDone++; tmTotalDone++;
+        document.getElementById('tmscore').textContent=tmTotalDone;
+        if(tmBatchDone>=(window._tmBatch||[]).length){
+          const hasMore=tmOffset+TM_BATCH<tmAll.length;
+          setTimeout(()=>{
+            if(hasMore){ document.getElementById('tmnext').style.display='block'; }
+            else { document.getElementById('tmfinish').style.display='block'; }
+          },350);
+        }
+      } else {
+        // wrong — flash both red
+        [document.getElementById('tmi-'+prev.side+'-'+prev.i), item].forEach(el=>{
+          if(!el) return;
+          el.classList.add('bad');
+          setTimeout(()=>el.classList.remove('bad'),500);
+        });
+      }
+    });
+  });
+}
+
+window.tmLoadNext=function(){
+  tmOffset+=TM_BATCH; tmSel=null;
+  document.getElementById('tmnext').style.display='none';
+  tmLoadBatch();
+};
+window.tmRestart=function(){ renderTerms(); };
+
+// ─────────────────────────────────────────────────────
+// TABLE
+// ─────────────────────────────────────────────────────
+function tRenderTable(items){
+  const rows=items.map((it,i)=>`<tr>
+    <td style="font-weight:700;color:#94a3b8;font-size:12px">${i+1}</td>
+    <td><div style="font-weight:700;color:#1e293b">${te(it.ru)}</div>
+        ${it.note?`<div class="tterm-tnote">💡 ${te(it.note)}</div>`:''}</td>
+    <td style="font-weight:700;color:${it.ccolor}">${te(it.vi)}</td>
+    <td><span style="font-size:10px;background:${it.ccolor}22;color:${it.ccolor};border-radius:8px;padding:2px 8px;font-weight:800">${te((it.clabel||'').replace(/\p{Emoji}/gu,'').trim())}</span></td>
+  </tr>`).join('');
+  return `<div style="margin-bottom:8px;text-align:right;font-size:12px;font-weight:700;color:#94a3b8">${items.length} thuật ngữ</div>
+  <div style="overflow-x:auto"><table class="tterm-tbl">
+    <thead><tr><th>#</th><th>🇷🇺 Tiếng Nga (chính thức)</th><th>🇻🇳 Tiếng Việt</th><th>Nhóm</th></tr></thead>
+    <tbody>${rows}</tbody>
+  </table></div>`;
+}
+
+// ─────────────────────────────────────────────────────
+// CONTROLS
+// ─────────────────────────────────────────────────────
+window.tSetMode=function(m){ tMode=m; tFlipped.clear(); renderTerms(); };
+window.tSetCat =function(c){ tCat=c;  tFlipped.clear(); renderTerms(); };
+window.tSetDir =function(d){ tDir=d;  tFlipped.clear(); renderTerms(); };
+
 </script>
 </body>
 </html>
