@@ -4754,7 +4754,7 @@ const TCATS = [
     { ru:'Московский центр международного сотрудничества', vi:'Trung tâm Hợp tác Quốc tế Moskva', note:'Đại diện A. Morozov; chia sẻ công nghệ CNTT, y tế, nông nghiệp với VN' },
   ]},
 
-  ,{ id:'phrases', label:'🖊️ Cụm từ & Ngữ pháp', color:'#0891b2', items:[
+  { id:'phrases', label:'🖊️ Cụm từ & Ngữ pháp', color:'#0891b2', items:[
     { ru:'председатель (Н.п.) — người chủ trì / chủ tịch phiên họp', vi:'Chủ trì / Chủ tịch (phiên họp)', note:'Khác với Президент (nguyên thủ); председатель dùng cho người điều hành cuộc họp, tổ chức' },
     { ru:'председательствовать (где / на чём) — chủ trì tại / trong', vi:'Chủ trì (tại hội nghị / trong phiên họp)', note:'VD: "сопредседательствовали заместитель министра" = hai thứ trưởng đồng chủ trì; на форуме = tại diễn đàn' },
     { ru:'сессия (Н.п.) — kỳ họp (của cả một hội đồng/nghị viện)', vi:'Kỳ họp (của nghị viện / hội đồng)', note:'Phân biệt: сессия = cả kỳ họp (nhiều ngày); заседание = một phiên họp cụ thể trong kỳ' },
@@ -4863,7 +4863,7 @@ function renderTerms(){
   p.innerHTML=`
   <div class="terms-hero">
     <div class="terms-hero-title">🏛️ Thuật ngữ Đặc thù — Ôn thi Biên dịch</div>
-    <div class="terms-hero-sub">Tên cơ quan · Chức danh · Dự án · Viết tắt — ${tAllItems().length} thuật ngữ · 6 nhóm</div>
+    <div class="terms-hero-sub">Tên cơ quan · Chức danh · Dự án · Viết tắt — ${tAllItems().length} thuật ngữ · 8 nhóm</div>
     <div class="tmode-bar">${modeBtns}</div>
   </div>
   <div class="tcat-bar">
@@ -5177,7 +5177,7 @@ function tRenderTable(items){
     <td><div style="font-weight:700;color:#1e293b">${te(it.ru)}</div>
         ${it.note?`<div class="tterm-tnote">💡 ${te(it.note)}</div>`:''}</td>
     <td style="font-weight:700;color:${it.ccolor}">${te(it.vi)}</td>
-    <td><span style="font-size:10px;background:${it.ccolor}22;color:${it.ccolor};border-radius:8px;padding:2px 8px;font-weight:800">${te((it.clabel||'').replace(/\p{Emoji}/gu,'').trim())}</span></td>
+    <td><span style="font-size:10px;background:${it.ccolor}22;color:${it.ccolor};border-radius:8px;padding:2px 8px;font-weight:800">${te((it.clabel||'').replace(/[^\u0000-\u007F\u0080-\u024F\u0400-\u04FF]/g,'').trim())}</span></td>
   </tr>`).join('');
   return `<div style="margin-bottom:8px;text-align:right;font-size:12px;font-weight:700;color:#94a3b8">${items.length} thuật ngữ</div>
   <div style="overflow-x:auto"><table class="tterm-tbl">
